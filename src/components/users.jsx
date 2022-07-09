@@ -20,7 +20,7 @@ const Users = () => {
         )
     }
 
-    const getBadgeClasses = (quality) => {
+    const getBadgeClasses = (quality) => { // можно вынести из компонента
         return `badge m-1 bg-${quality.color}`
     }
 
@@ -33,8 +33,8 @@ const Users = () => {
                     </td>
                     <td>
                         {user.qualities.map((quality) => {
-                        return <span key={quality._id} className={getBadgeClasses(quality)}>{`${quality.name}`}</span>
-                    })}
+                            return <span key={quality._id} className={getBadgeClasses(quality)}>{`${quality.name}`}</span>
+                        })}
                     </td>
                     <td>
                         {user.profession.name}
@@ -74,9 +74,7 @@ const Users = () => {
                 </tr>
                 </thead>
                 <tbody>
-
-                {renderTableRows()}
-
+                    {renderTableRows()}
                 </tbody>
             </table>
         </>
