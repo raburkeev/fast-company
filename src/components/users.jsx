@@ -8,20 +8,16 @@ const Users = () => {
         setUsers(prevState => prevState.filter((user) => user !== userId))
     }
 
-    const getFormatOfWordPeople = (number) => {
-        return [2, 3, 4].includes(number) ? 'человека' : 'человек'
+    const getFormatOfWordsInPhrase = (number) => {
+        return [2, 3, 4].includes(number) ? 'человека тусанут' : 'человек тусанет'
     }
 
     const renderPhrase = () => {
         return (
             <span className="badge bg-primary p-2 m-2 fs-5">
-                {`${users.length} ${getFormatOfWordPeople(users.length)} тусанет с тобой сегодня`}
+                {`${users.length} ${getFormatOfWordsInPhrase(users.length)} с тобой сегодня`}
             </span>
         )
-    }
-
-    const getBadgeClasses = (quality) => {
-        return `badge m-1 bg-${quality.color}`
     }
 
     const renderTableRows = () => {
@@ -33,7 +29,7 @@ const Users = () => {
                     </td>
                     <td>
                         {user.qualities.map((quality) => {
-                        return <span key={quality._id} className={getBadgeClasses(quality)}>{`${quality.name}`}</span>
+                        return <span key={quality._id} className={`badge m-1 bg-${quality.color}`}>{`${quality.name}`}</span>
                     })}
                     </td>
                     <td>
@@ -70,13 +66,11 @@ const Users = () => {
                     <th scope="col">Профессия</th>
                     <th scope="col">Встретился, раз</th>
                     <th scope="col">Оценка</th>
-                    <th scope="col"></th>
+                    <th />
                 </tr>
                 </thead>
                 <tbody>
-
                 {renderTableRows()}
-
                 </tbody>
             </table>
         </>
