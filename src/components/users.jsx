@@ -1,9 +1,9 @@
 import React from "react"
-import User from "./userComponent";
+import User from "./userComponent"
 
-const Users = ({users, onDelete, handleToggleBookMark}) => {
+const Users = ({users, onDelete, onToggleBookMark}) => {
     return users.map(user => {
-        return <User key={user._id} user={user} onDelete={onDelete} handleToggleBookMark={handleToggleBookMark}/>
+        return <User key={user._id} user={user} onDelete={onDelete} onToggleBookMark={onToggleBookMark}/>
     })
 }
 

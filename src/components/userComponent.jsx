@@ -1,8 +1,12 @@
-import React from "react";
-import Quality from "./qualitie";
-import BookMark from "./bookmark";
+import React from "react"
+import Quality from "./qualitie"
+import BookMark from "./bookmark"
 
-const User = ({user, onDelete, handleToggleBookMark}) => {
+const User = ({user, onDelete, onToggleBookMark}) => {
+    const handleDelete = () => {
+        onDelete(user)
+    }
+
     return (
         <tr>
             <td>
@@ -23,10 +27,10 @@ const User = ({user, onDelete, handleToggleBookMark}) => {
                 {user.rate}
             </td>
             <td>
-                <BookMark handleToggleBookMark={handleToggleBookMark} userId={user._id} user={user}/>
+                <BookMark onToggleBookMark={onToggleBookMark} userId={user._id} user={user}/>
             </td>
             <td>
-                <button type="button" className="btn btn-danger" onClick={() => onDelete(user)}>Delete</button>
+                <button type="button" className="btn btn-danger" onClick={handleDelete}>Delete</button>
             </td>
         </tr>
     )

@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 
 const SearchStatus = ({length}) => {
     const getFormatOfWordsInPhrase = (number) => {
@@ -8,7 +8,7 @@ const SearchStatus = ({length}) => {
     return (
         <span className="badge bg-primary p-2 m-2 fs-5">
                 {`${length} ${getFormatOfWordsInPhrase(length)} с тобой сегодня`}
-            </span>
+        </span>
     )
 }
 
