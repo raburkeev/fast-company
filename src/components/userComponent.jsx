@@ -1,6 +1,8 @@
 import React from "react";
+import Quality from "./qualitie";
+import BookMark from "./bookmark";
 
-const User = ({user, onDelete}) => {
+const User = ({user, onDelete, handleToggleBookMark}) => {
     return (
         <tr>
             <td>
@@ -8,7 +10,7 @@ const User = ({user, onDelete}) => {
             </td>
             <td>
                 {user.qualities.map((quality) => {
-                    return <span key={quality._id} className={`badge m-1 bg-${quality.color}`}>{`${quality.name}`}</span>
+                    return <Quality quality={quality} key={quality._id}/>
                 })}
             </td>
             <td>
@@ -21,11 +23,13 @@ const User = ({user, onDelete}) => {
                 {user.rate}
             </td>
             <td>
+                <BookMark handleToggleBookMark={handleToggleBookMark} userId={user._id} user={user}/>
+            </td>
+            <td>
                 <button type="button" className="btn btn-danger" onClick={() => onDelete(user)}>Delete</button>
             </td>
         </tr>
     )
 }
-
 
 export default User
