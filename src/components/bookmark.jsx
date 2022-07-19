@@ -7,7 +7,7 @@ const BookMark = ({onToggleBookMark, userId, user}) => {
 
     return (
         <button className="btn btn-light" onClick={handleToggleBookMark}>
-            {user.bookmark ? <i className="bi bi-bookmark-star-fill"></i> : <i className="bi bi-bookmark-star"></i>}
+            <i className={`bi bi-bookmark-star${user.bookmark ? '-fill' : ''}`}></i>
         </button>
     )
 }
