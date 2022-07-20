@@ -1,6 +1,7 @@
 import React from 'react'
 import Quality from './qualitie'
 import BookMark from './bookmark'
+import PropTypes from 'prop-types'
 
 const User = ({ user, onDelete, onToggleBookMark }) => {
     const handleDelete = () => {
@@ -27,8 +28,8 @@ const User = ({ user, onDelete, onToggleBookMark }) => {
             </td>
             <td>
                 <button
-                    type='button'
-                    className='btn btn-danger'
+                    type="button"
+                    className="btn btn-danger"
                     onClick={handleDelete}
                 >
                     Delete
@@ -36,6 +37,12 @@ const User = ({ user, onDelete, onToggleBookMark }) => {
             </td>
         </tr>
     )
+}
+
+User.propTypes = {
+    user: PropTypes.object.isRequired,
+    onDelete: PropTypes.func.isRequired,
+    onToggleBookMark: PropTypes.func.isRequired
 }
 
 export default User

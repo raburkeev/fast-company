@@ -30,7 +30,7 @@ const App = () => {
 
     if (usersCount === 0) {
         return (
-            <span className='badge bg-danger p-2 m-2 fs-5'>
+            <span className="badge bg-danger p-2 m-2 fs-5">
                 Никто с тобой не тусанет :(
             </span>
         )
@@ -39,15 +39,15 @@ const App = () => {
     return (
         <>
             <SearchStatus length={usersCount} />
-            <table className='table'>
+            <table className="table">
                 <thead>
                     <tr>
-                        <th scope='col'>Имя</th>
-                        <th scope='col'>Качества</th>
-                        <th scope='col'>Профессия</th>
-                        <th scope='col'>Встретился, раз</th>
-                        <th scope='col'>Оценка</th>
-                        <th scope='col'>Избранное</th>
+                        <th scope="col">Имя</th>
+                        <th scope="col">Качества</th>
+                        <th scope="col">Профессия</th>
+                        <th scope="col">Встретился, раз</th>
+                        <th scope="col">Оценка</th>
+                        <th scope="col">Избранное</th>
                         <th />
                     </tr>
                 </thead>
