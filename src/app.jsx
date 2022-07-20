@@ -39,26 +39,11 @@ const App = () => {
     return (
         <>
             <SearchStatus length={usersCount} />
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th scope="col">Имя</th>
-                        <th scope="col">Качества</th>
-                        <th scope="col">Профессия</th>
-                        <th scope="col">Встретился, раз</th>
-                        <th scope="col">Оценка</th>
-                        <th scope="col">Избранное</th>
-                        <th />
-                    </tr>
-                </thead>
-                <tbody>
-                    <Users
-                        users={userCrop}
-                        onDelete={handleDelete}
-                        onToggleBookMark={handleToggleBookMark}
-                    />
-                </tbody>
-            </table>
+            <Users
+                users={userCrop}
+                onDelete={handleDelete}
+                onToggleBookMark={handleToggleBookMark}
+            />
             <Pagination
                 itemsCount={usersCount}
                 pageSize={pageSize}
