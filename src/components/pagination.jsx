@@ -14,6 +14,7 @@ const Pagination = ({ itemsCount, pageSize, onPageChange, currentPage }) => {
     return (
         <nav className="d-flex justify-content-center">
             <ul className="pagination">
+                <li><button className="page-link" onClick={() => handlePageChange(currentPage - 1)} >Previous</button></li>
                 {pages.map((page) => (
                     <li
                         className={`page-item ${
@@ -29,6 +30,7 @@ const Pagination = ({ itemsCount, pageSize, onPageChange, currentPage }) => {
                         </button>
                     </li>
                 ))}
+                <li><button className="page-link" onClick={() => handlePageChange(currentPage + 1)}>Next</button></li>
             </ul>
         </nav>
     )
