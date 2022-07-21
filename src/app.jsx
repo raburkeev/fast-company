@@ -8,7 +8,7 @@ import { paginate } from './utils/paginate'
 const App = () => {
     const [users, setUsers] = useState(api.users.fetchAll())
     const usersCount = users.length
-    const pageSize = 4
+    const pageSize = 2
     const [currentPage, setCurrentPage] = useState(1)
 
     const handlePageChange = (pageIndex) => {

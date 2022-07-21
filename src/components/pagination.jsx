@@ -7,14 +7,19 @@ const Pagination = ({ itemsCount, pageSize, onPageChange, currentPage }) => {
     if (pageCount === 1) return null
     const pages = _.range(1, pageCount + 1)
 
-    const handlePageChange = (page) => {
-        onPageChange(page)
-    }
-
     return (
         <nav className="d-flex justify-content-center">
             <ul className="pagination">
-                <li><button className="page-link" onClick={() => handlePageChange(currentPage - 1)} >Previous</button></li>
+                {currentPage !== 1
+                    ? (<li>
+                        <button
+                            className="page-link"
+                            onClick={() => onPageChange(currentPage - 1)}
+                        >
+                            Previous
+                        </button>
+                    </li>)
+                    : null}
                 {pages.map((page) => (
                     <li
                         className={`page-item ${
@@ -24,13 +29,22 @@ const Pagination = ({ itemsCount, pageSize, onPageChange, currentPage }) => {
                     >
                         <button
                             className="page-link"
-                            onClick={() => handlePageChange(page)}
+                            onClick={() => onPageChange(page)}
                         >
                             {page}
                         </button>
                     </li>
                 ))}
-                <li><button className="page-link" onClick={() => handlePageChange(currentPage + 1)}>Next</button></li>
+                {currentPage !== pages.length
+                    ? (<li>
+                        <button
+                            className="page-link"
+                            onClick={() => onPageChange(currentPage + 1)}
+                        >
+                            Next
+                        </button>
+                    </li>)
+                    : null}
             </ul>
         </nav>
     )
