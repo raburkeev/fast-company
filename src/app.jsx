@@ -2,20 +2,11 @@ import React, { useState } from 'react'
 import api from './api'
 import Users from './components/users'
 import SearchStatus from './components/searchStatus'
-import Pagination from './components/pagination'
-import { paginate } from './utils/paginate'
 
 const App = () => {
     const [users, setUsers] = useState(api.users.fetchAll())
+
     const usersCount = users.length
-    const pageSize = 2
-    const [currentPage, setCurrentPage] = useState(1)
-
-    const handlePageChange = (pageIndex) => {
-        setCurrentPage(pageIndex)
-    }
-
-    const userCrop = paginate(users, currentPage, pageSize)
 
     const handleDelete = (userId) => {
         setUsers(users.filter((user) => user !== userId))
@@ -40,15 +31,9 @@ const App = () => {
         <>
             <SearchStatus length={usersCount} />
             <Users
-                users={userCrop}
+                users={users}
                 onDelete={handleDelete}
                 onToggleBookMark={handleToggleBookMark}
-            />
-            <Pagination
-                itemsCount={usersCount}
-                pageSize={pageSize}
-                currentPage={currentPage}
-                onPageChange={handlePageChange}
             />
         </>
     )
