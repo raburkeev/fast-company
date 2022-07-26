@@ -5,66 +5,94 @@ import PropTypes from 'prop-types'
 import { paginate } from '../utils/paginate'
 import Pagination from './pagination'
 import GroupList from './groupList'
+import SearchStatus from './searchStatus'
 
 const Users = ({ users, onDelete, onToggleBookMark }) => {
     const [currentPage, setCurrentPage] = useState(1)
     const [professions, setProfessions] = useState()
+    const [selectedProf, setSelectedProf] = useState()
     const pageSize = 2
 
     useEffect(() => {
         api.professions.fetchAll().then((data) => setProfessions(data))
     }, [currentPage])
 
+    useEffect(() => {
+        setCurrentPage(1)
+    }, [selectedProf])
+
     const handlePageChange = (pageIndex) => {
         setCurrentPage(pageIndex)
     }
 
-    const usersCrop = paginate(users, currentPage, pageSize)
+    const filteredUsers = selectedProf
+        ? users.filter((user) => user.profession === selectedProf)
+        : users
+    const usersCount = filteredUsers.length
+    const usersCrop = paginate(filteredUsers, currentPage, pageSize)
 
-    const handleProfessionSelect = (params) => {
-        console.log(params)
+    const handleProfessionSelect = (item) => {
+        setSelectedProf(item)
+    }
+
+    const clearFilter = () => {
+        setSelectedProf()
     }
 
     return (
-        <>
+        <div className="d-flex">
             {professions && (
-                <GroupList
-                    items={professions}
-                    onItemSelect={handleProfessionSelect}
-                />
+                <div className="d-flex flex-column flex-shrink-0 p-3">
+                    <GroupList
+                        items={professions}
+                        selectedItem={selectedProf}
+                        onItemSelect={handleProfessionSelect}
+                    />
+                    <button
+                        className="btn btn-secondary mt-2"
+                        onClick={clearFilter}
+                    >
+                        Очистить
+                    </button>
+                </div>
             )}
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th scope="col">Имя</th>
-                        <th scope="col">Качества</th>
-                        <th scope="col">Профессия</th>
-                        <th scope="col">Встретился, раз</th>
-                        <th scope="col">Оценка</th>
-                        <th scope="col">Избранное</th>
-                        <th />
-                    </tr>
-                </thead>
-                <tbody>
-                    {usersCrop.map((user) => {
-                        return (
-                            <User
-                                key={user._id}
-                                user={user}
-                                onDelete={onDelete}
-                                onToggleBookMark={onToggleBookMark}
-                            />
-                        )
-                    })}
-                </tbody>
-            </table>
-            <Pagination
-                itemsCount={users.length}
-                pageSize={pageSize}
-                currentPage={currentPage}
-                onPageChange={handlePageChange}
-            />
-        </>
+            <div className="d-flex flex-column">
+                <SearchStatus length={usersCount} />
+                <table className="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Имя</th>
+                            <th scope="col">Качества</th>
+                            <th scope="col">Профессия</th>
+                            <th scope="col">Встретился, раз</th>
+                            <th scope="col">Оценка</th>
+                            <th scope="col">Избранное</th>
+                            <th />
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {usersCrop.map((user) => {
+                            return (
+                                <User
+                                    key={user._id}
+                                    user={user}
+                                    onDelete={onDelete}
+                                    onToggleBookMark={onToggleBookMark}
+                                />
+                            )
+                        })}
+                    </tbody>
+                </table>
+                <div className="d-flex justify-content-center">
+                    <Pagination
+                        itemsCount={usersCount}
+                        pageSize={pageSize}
+                        currentPage={currentPage}
+                        onPageChange={handlePageChange}
+                    />
+                </div>
+            </div>
+        </div>
     )
 }
 
