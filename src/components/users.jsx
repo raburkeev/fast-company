@@ -6,60 +6,65 @@ import { paginate } from '../utils/paginate'
 import Pagination from './pagination'
 import GroupList from './groupList'
 import SearchStatus from './searchStatus'
+import Loader from './loader'
 
 const Users = ({ users, onDelete, onToggleBookMark }) => {
     const [currentPage, setCurrentPage] = useState(1)
-    const [professions, setProfessions] = useState()
-    const [selectedProf, setSelectedProf] = useState()
+    const [professions, setProfessions] = useState([])
+    const [selectedProf, setSelectedProf] = useState(null)
     const pageSize = 4
 
     useEffect(() => {
         api.professions.fetchAll().then((data) => setProfessions(data))
     }, [currentPage])
 
-    useEffect(() => {
-        setCurrentPage(1)
-    }, [selectedProf])
-
     const handlePageChange = (pageIndex) => {
         setCurrentPage(pageIndex)
     }
 
     const filteredUsers = selectedProf
-        ? users.filter(
-              (user) =>
-                  user.profession.name === selectedProf.name &&
-                  user.profession._id === selectedProf._id
-          )
+        ? users.filter(user => user.profession._id === selectedProf._id)
         : users
     const usersCount = filteredUsers.length
     const usersCrop = paginate(filteredUsers, currentPage, pageSize)
 
     const handleProfessionSelect = (item) => {
         setSelectedProf(item)
+        setCurrentPage(1)
     }
 
     const clearFilter = () => {
-        setSelectedProf()
+        setSelectedProf(null)
+        setCurrentPage(1)
+    }
+
+    if (usersCount === 0) {
+        return (
+            <span className="badge bg-danger p-2 m-2 fs-5">
+                Никто с тобой не тусанет :(
+            </span>
+        )
     }
 
     return (
         <div className="d-flex">
-            {professions && (
-                <div className="d-flex flex-column flex-shrink-0 p-3">
-                    <GroupList
-                        items={professions}
-                        selectedItem={selectedProf}
-                        onItemSelect={handleProfessionSelect}
-                    />
-                    <button
-                        className="btn btn-secondary mt-2"
-                        onClick={clearFilter}
-                    >
-                        Очистить
-                    </button>
-                </div>
-            )}
+            {professions.length === 0
+                ? <Loader loadingTarget={'filter'} margin={1}/>
+                : (
+                    <div className="d-flex flex-column flex-shrink-0 p-3">
+                        <GroupList
+                            items={professions}
+                            selectedItem={selectedProf}
+                            onItemSelect={handleProfessionSelect}
+                        />
+                        <button
+                            className="btn btn-secondary mt-2"
+                            onClick={clearFilter}
+                        >
+                            Очистить
+                        </button>
+                    </div>
+                )}
             <div className="d-flex flex-column">
                 <SearchStatus length={usersCount} />
                 <table className="table">

@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react'
 import api from './api'
 import Users from './components/users'
+import Loader from './components/loader'
 
 const App = () => {
     const [users, setUsers] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
-        api.users.fetchAll().then((data) => setUsers(data))
-    }, [users])
-
-    const usersCount = users.length
+        api.users.fetchAll().then((data) => {
+            setIsLoading(false)
+            return setUsers(data)
+        })
+    }, [])
 
     const handleDelete = (userId) => {
-        setUsers(users.filter((user) => user !== userId))
+        setUsers(users.filter(user => user !== userId))
     }
 
     const handleToggleBookMark = (userId) => {
@@ -22,23 +25,17 @@ const App = () => {
         setUsers(updatedState)
     }
 
-    if (usersCount === 0) {
-        return (
-            <span className="badge bg-danger p-2 m-2 fs-5">
-                Никто с тобой не тусанет :(
-            </span>
-        )
-    }
-
     return (
         <>
-            {users && (
-                <Users
-                    users={users}
-                    onDelete={handleDelete}
-                    onToggleBookMark={handleToggleBookMark}
-                />
-            )}
+            {isLoading
+                ? <Loader loadingTarget={'users'} margin={5}/>
+                : (
+                    <Users
+                        users={users}
+                        onDelete={handleDelete}
+                        onToggleBookMark={handleToggleBookMark}
+                    />
+                )}
         </>
     )
 }
