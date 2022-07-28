@@ -9,16 +9,16 @@ import SearchStatus from './searchStatus'
 
 const Users = ({ users, onDelete, onToggleBookMark }) => {
     const [currentPage, setCurrentPage] = useState(1)
-    const [professions, setProfessions] = useState()
-    const [selectedProf, setSelectedProf] = useState()
+    const [professions, setProfessions] = useState() // старайся всегда задавать начальное значение, тут отлично подойдет []
+    const [selectedProf, setSelectedProf] = useState() // тут null 
     const pageSize = 4
 
     useEffect(() => {
         api.professions.fetchAll().then((data) => setProfessions(data))
     }, [currentPage])
 
-    useEffect(() => {
-        setCurrentPage(1)
+    useEffect(() => { // вот этот вариант не очень хороший, если что могу голосом объясниить
+        setCurrentPage(1) // это лучше вынести в функцию handleProfessionSelect
     }, [selectedProf])
 
     const handlePageChange = (pageIndex) => {
@@ -28,19 +28,21 @@ const Users = ({ users, onDelete, onToggleBookMark }) => {
     const filteredUsers = selectedProf
         ? users.filter(
               (user) =>
-                  user.profession.name === selectedProf.name &&
-                  user.profession._id === selectedProf._id
+                  user.profession.name === selectedProf.name && // тут просто user.pridession._id === selectedProf._id
+                  user.profession._id === selectedProf._id // в эталоне вообще будет JSON.strigydy - но тут этого точно не надо 
           )
         : users
     const usersCount = filteredUsers.length
     const usersCrop = paginate(filteredUsers, currentPage, pageSize)
 
     const handleProfessionSelect = (item) => {
-        setSelectedProf(item)
+        setSelectedProf(item);
+        setCurrentPage(1);
     }
 
     const clearFilter = () => {
-        setSelectedProf()
+        setSelectedProf(null);
+        setCurrentPage(1); // Что с линтером, почему без ';' ?
     }
 
     return (
