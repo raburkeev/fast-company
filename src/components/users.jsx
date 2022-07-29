@@ -48,7 +48,7 @@ const Users = ({ users, onDelete, onToggleBookMark }) => {
 
     return (
         <div className="d-flex">
-            {professions.length === 0
+            {professions.length === 0 //  нет, а что если у тебя придет пустой массив? Или запрос сломается ? Надо всегда думать о плохом сценарии 
                 ? <Loader loadingTarget={'filter'} margin={1}/>
                 : (
                     <div className="d-flex flex-column flex-shrink-0 p-3">
