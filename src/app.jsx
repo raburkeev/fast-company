@@ -5,11 +5,11 @@ import Loader from './components/loader'
 
 const App = () => {
     const [users, setUsers] = useState([])
-    const [isLoading, setIsLoading] = useState(true)
+    const [isUsersLoading, setIsUsersLoading] = useState(true)
 
     useEffect(() => {
         api.users.fetchAll().then((data) => {
-            setIsLoading(false)
+            setIsUsersLoading(false)
             return setUsers(data)
         })
     }, [])
@@ -27,7 +27,7 @@ const App = () => {
 
     return (
         <>
-            {isLoading
+            {isUsersLoading
                 ? <Loader loadingTarget={'users'} margin={5}/>
                 : (
                     <Users

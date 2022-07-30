@@ -12,10 +12,14 @@ const Users = ({ users, onDelete, onToggleBookMark }) => {
     const [currentPage, setCurrentPage] = useState(1)
     const [professions, setProfessions] = useState([])
     const [selectedProf, setSelectedProf] = useState(null)
+    const [isGroupListLoading, setIsGroupListLoading] = useState(true)
     const pageSize = 4
 
     useEffect(() => {
-        api.professions.fetchAll().then((data) => setProfessions(data))
+        api.professions.fetchAll().then(data => {
+            setIsGroupListLoading(false)
+            return setProfessions(data)
+        })
     }, [currentPage])
 
     const handlePageChange = (pageIndex) => {
@@ -48,7 +52,7 @@ const Users = ({ users, onDelete, onToggleBookMark }) => {
 
     return (
         <div className="d-flex">
-            {professions.length === 0
+            {isGroupListLoading
                 ? <Loader loadingTarget={'filter'} margin={1}/>
                 : (
                     <div className="d-flex flex-column flex-shrink-0 p-3">
