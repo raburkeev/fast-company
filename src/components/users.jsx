@@ -18,9 +18,9 @@ const Users = ({ users, onDelete, onToggleBookMark }) => {
     useEffect(() => {
         api.professions.fetchAll().then(data => {
             setIsGroupListLoading(false)
-            return setProfessions(data)
+            return setProfessions(data) // return не нужен
         })
-    }, [currentPage])
+    }, [currentPage]) // ты делаешь заптрос каждый раз, когда меняешь страницу, надо только 1 раз
 
     const handlePageChange = (pageIndex) => {
         setCurrentPage(pageIndex)
