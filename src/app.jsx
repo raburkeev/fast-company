@@ -10,7 +10,7 @@ const App = () => {
     useEffect(() => {
         api.users.fetchAll().then((data) => {
             setIsUsersLoading(false)
-            return setUsers(data)
+            setUsers(data)
         })
     }, [])
 
