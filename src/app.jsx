@@ -1,24 +1,21 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import api from './api'
 import Users from './components/users'
-import SearchStatus from './components/searchStatus'
-import Pagination from './components/pagination'
-import { paginate } from './utils/paginate'
+import Loader from './components/loader'
 
 const App = () => {
-    const [users, setUsers] = useState(api.users.fetchAll())
-    const usersCount = users.length
-    const pageSize = 2
-    const [currentPage, setCurrentPage] = useState(1)
+    const [users, setUsers] = useState([])
+    const [isUsersLoading, setIsUsersLoading] = useState(true)
 
-    const handlePageChange = (pageIndex) => {
-        setCurrentPage(pageIndex)
-    }
-
-    const userCrop = paginate(users, currentPage, pageSize)
+    useEffect(() => {
+        api.users.fetchAll().then((data) => {
+            setIsUsersLoading(false)
+            return setUsers(data)
+        })
+    }, [])
 
     const handleDelete = (userId) => {
-        setUsers(users.filter((user) => user !== userId))
+        setUsers(users.filter(user => user !== userId))
     }
 
     const handleToggleBookMark = (userId) => {
@@ -28,28 +25,17 @@ const App = () => {
         setUsers(updatedState)
     }
 
-    if (usersCount === 0) {
-        return (
-            <span className="badge bg-danger p-2 m-2 fs-5">
-                Никто с тобой не тусанет :(
-            </span>
-        )
-    }
-
     return (
         <>
-            <SearchStatus length={usersCount} />
-            <Users
-                users={userCrop}
-                onDelete={handleDelete}
-                onToggleBookMark={handleToggleBookMark}
-            />
-            <Pagination
-                itemsCount={usersCount}
-                pageSize={pageSize}
-                currentPage={currentPage}
-                onPageChange={handlePageChange}
-            />
+            {isUsersLoading
+                ? <Loader loadingTarget={'users'} margin={5}/>
+                : (
+                    <Users
+                        users={users}
+                        onDelete={handleDelete}
+                        onToggleBookMark={handleToggleBookMark}
+                    />
+                )}
         </>
     )
 }
