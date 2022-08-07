@@ -10,16 +10,18 @@ const Pagination = ({ itemsCount, pageSize, onPageChange, currentPage }) => {
     return (
         <nav className="d-flex justify-content-center">
             <ul className="pagination">
-                {currentPage !== 1 ? (
-                    <li>
-                        <button
-                            className="page-link"
-                            onClick={() => onPageChange(currentPage - 1)}
-                        >
-                            Previous
-                        </button>
-                    </li>
-                ) : null}
+                {currentPage !== 1
+                    ? (
+                        <li>
+                            <button
+                                className="page-link"
+                                onClick={() => onPageChange(currentPage - 1)}
+                            >
+                                Previous
+                            </button>
+                        </li>
+                    )
+                    : null}
                 {pages.map((page) => (
                     <li
                         className={`page-item ${
@@ -35,16 +37,18 @@ const Pagination = ({ itemsCount, pageSize, onPageChange, currentPage }) => {
                         </button>
                     </li>
                 ))}
-                {currentPage !== pages.length ? (
-                    <li>
-                        <button
-                            className="page-link"
-                            onClick={() => onPageChange(currentPage + 1)}
-                        >
-                            Next
-                        </button>
-                    </li>
-                ) : null}
+                {currentPage !== pages.length
+                    ? (
+                        <li>
+                            <button
+                                className="page-link"
+                                onClick={() => onPageChange(currentPage + 1)}
+                            >
+                                Next
+                            </button>
+                        </li>
+                    )
+                    : null}
             </ul>
         </nav>
     )
