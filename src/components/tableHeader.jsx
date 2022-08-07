@@ -10,7 +10,7 @@ const TableHeader = ({ onSort, selectedSort, columns }) => {
         }
     }
 
-    const showArrowOnSelectedSort = (column) => {
+    const renderArrowOnSelectedSort = (column) => {
         if (column.path) {
             if (column.path === selectedSort.path && selectedSort.order === 'asc') {
                 return <i className="bi bi-caret-down-fill mx-1" />
@@ -31,7 +31,7 @@ const TableHeader = ({ onSort, selectedSort, columns }) => {
                         {...{ role: columns[column].path && 'button' }}
                     >
                         {columns[column].name}
-                        {showArrowOnSelectedSort(columns[column])}
+                        {renderArrowOnSelectedSort(columns[column])}
                     </th>
                 ))}
             </tr>
