@@ -6,7 +6,10 @@ import Table from './table'
 
 const UsersTable = ({ users, onDelete, onToggleBookMark, onSort, selectedSort }) => {
     const columns = {
-        name: { path: 'name', name: 'Имя' },
+        name: {
+            path: 'name',
+            name: 'Имя'
+        },
         qualities: {
             name: 'Качества',
             component: (user) => (
