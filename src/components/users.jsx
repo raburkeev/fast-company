@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import api from '../api/index'
 import UsersList from './usersList'
-import UserPage from './userPage'
-import { useParams } from 'react-router-dom'
 
 const Users = () => {
     const [users, setUsers] = useState([])
     const [isUsersLoading, setIsUsersLoading] = useState(true)
     const [professions, setProfessions] = useState([])
     const [isGroupListLoading, setIsGroupListLoading] = useState(true)
-    const params = useParams()
-    const { userId } = params
 
     useEffect(() => {
         api.users.fetchAll().then((data) => {
@@ -38,16 +34,14 @@ const Users = () => {
     }
 
     return (
-        userId
-            ? <UserPage id={userId} />
-            : <UsersList
-                users={users}
-                professions={professions}
-                handleDelete={handleDelete}
-                handleToggleBookMark={handleToggleBookMark}
-                isUsersLoading={isUsersLoading}
-                isGroupListLoading={isGroupListLoading}
-            />)
+        <UsersList
+            users={users}
+            professions={professions}
+            handleDelete={handleDelete}
+            handleToggleBookMark={handleToggleBookMark}
+            isUsersLoading={isUsersLoading}
+            isGroupListLoading={isGroupListLoading}
+        />)
 }
 
 export default Users
