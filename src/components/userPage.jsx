@@ -4,13 +4,13 @@ import PropTypes from 'prop-types'
 import Loader from './loader'
 import { useHistory } from 'react-router-dom'
 
-const UserPage = ({ id }) => {
-    const [user, setUser] = useState({})
+const UserPage = ({ id }) => { // может в 
+    const [user, setUser] = useState(null)
     const history = useHistory()
 
     useEffect(() => {
         api.users.getById(id).then((data) => {
-            if (typeof data !== 'undefined') {
+            if (typeof data !== 'undefined') { //ну если ты хочешь проверить на undefined/ можно if (data !== undefined)
                 setUser(data)
             }
         })
@@ -20,7 +20,7 @@ const UserPage = ({ id }) => {
         history.push('/users')
     }
 
-    return JSON.stringify(user) !== '{}'
+    return user
         ? (
             <>
                 <h1>{user.name}</h1>
