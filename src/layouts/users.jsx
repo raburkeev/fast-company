@@ -1,18 +1,47 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import api from '../api'
 import _ from 'lodash'
 import { paginate } from '../utils/paginate'
-import Loader from './loader'
-import GroupList from './groupList'
-import SearchStatus from './searchStatus'
-import UsersTable from './usersTable'
-import Pagination from './pagination'
-import PropTypes from 'prop-types'
+import Loader from '../components/loader'
+import GroupList from '../components/groupList'
+import SearchStatus from '../components/searchStatus'
+import UsersTable from '../components/usersTable'
+import Pagination from '../components/pagination'
 
-const UsersList = ({ users, professions, handleDelete, handleToggleBookMark, isUsersLoading, isGroupListLoading }) => {
+const Users = () => {
+    const [users, setUsers] = useState([])
+    const [isUsersLoading, setIsUsersLoading] = useState(true)
+    const [professions, setProfessions] = useState([])
+    const [isGroupListLoading, setIsGroupListLoading] = useState(true)
     const [currentPage, setCurrentPage] = useState(1)
     const [selectedProf, setSelectedProf] = useState(null)
     const [sortBy, setSortBy] = useState({ iter: 'name', order: 'asc' })
     const pageSize = 8
+
+    useEffect(() => {
+        api.users.fetchAll().then((data) => {
+            setIsUsersLoading(false)
+            setUsers(data)
+        })
+    }, [])
+
+    useEffect(() => {
+        api.professions.fetchAll().then(data => {
+            setIsGroupListLoading(false)
+            setProfessions(data)
+        })
+    }, [])
+
+    const handleDelete = (userId) => {
+        setUsers(users.filter(user => user._id !== userId))
+    }
+
+    const handleToggleBookMark = (userId) => {
+        const updatedState = [...users]
+        const userFoundById = updatedState.find((user) => user._id === userId)
+        userFoundById.bookmark = !userFoundById.bookmark
+        setUsers(updatedState)
+    }
 
     const handlePageChange = (pageIndex) => {
         setCurrentPage(pageIndex)
@@ -91,13 +120,4 @@ const UsersList = ({ users, professions, handleDelete, handleToggleBookMark, isU
     return <Loader loadingTarget={'users'} margin={5} />
 }
 
-UsersList.propTypes = {
-    users: PropTypes.array.isRequired,
-    handleDelete: PropTypes.func.isRequired,
-    handleToggleBookMark: PropTypes.func.isRequired,
-    isUsersLoading: PropTypes.bool.isRequired,
-    professions: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-    isGroupListLoading: PropTypes.bool.isRequired
-}
-
-export default UsersList
+export default Users
