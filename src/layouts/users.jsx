@@ -1,28 +1,34 @@
 import React, { useState, useEffect } from 'react'
-import api from '../api/index'
-import { paginate } from '../utils/paginate'
-import Pagination from './pagination'
-import GroupList from './groupList'
-import SearchStatus from './searchStatus'
-import Loader from './loader'
-import UsersTable from './usersTable'
+import api from '../api'
 import _ from 'lodash'
+import { paginate } from '../utils/paginate'
+import Loader from '../components/loader'
+import GroupList from '../components/groupList'
+import SearchStatus from '../components/searchStatus'
+import UsersTable from '../components/usersTable'
+import Pagination from '../components/pagination'
 
 const Users = () => {
-    const [currentPage, setCurrentPage] = useState(1)
-    const [professions, setProfessions] = useState([])
-    const [selectedProf, setSelectedProf] = useState(null)
-    const [sortBy, setSortBy] = useState({ iter: 'name', order: 'asc' })
-    const [isGroupListLoading, setIsGroupListLoading] = useState(true)
-    const pageSize = 8
-
     const [users, setUsers] = useState([])
     const [isUsersLoading, setIsUsersLoading] = useState(true)
+    const [professions, setProfessions] = useState([])
+    const [isGroupListLoading, setIsGroupListLoading] = useState(true)
+    const [currentPage, setCurrentPage] = useState(1)
+    const [selectedProf, setSelectedProf] = useState(null)
+    const [sortBy, setSortBy] = useState({ iter: 'name', order: 'asc' })
+    const pageSize = 8
 
     useEffect(() => {
         api.users.fetchAll().then((data) => {
             setIsUsersLoading(false)
             setUsers(data)
+        })
+    }, [])
+
+    useEffect(() => {
+        api.professions.fetchAll().then(data => {
+            setIsGroupListLoading(false)
+            setProfessions(data)
         })
     }, [])
 
@@ -36,13 +42,6 @@ const Users = () => {
         userFoundById.bookmark = !userFoundById.bookmark
         setUsers(updatedState)
     }
-
-    useEffect(() => {
-        api.professions.fetchAll().then(data => {
-            setIsGroupListLoading(false)
-            setProfessions(data)
-        })
-    }, [])
 
     const handlePageChange = (pageIndex) => {
         setCurrentPage(pageIndex)
