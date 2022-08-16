@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import api from '../api/index'
 import Loader from './loader'
 import { useHistory, useParams } from 'react-router-dom'
+import QualitiesList from './qualitiesList'
 
 const UserPage = () => {
     const [user, setUser] = useState({})
@@ -13,7 +14,6 @@ const UserPage = () => {
         api.users.getById(userId).then((data) => {
             if (typeof data !== 'undefined') {
                 setUser(data)
-                console.log('data', data)
             }
         })
     }, [])
@@ -24,16 +24,14 @@ const UserPage = () => {
 
     return JSON.stringify(user) !== '{}'
         ? (
-            <>
+            <div>
                 <h1>{user.name}</h1>
                 <h2>{`Профессия: ${user.profession.name}`}</h2>
-                {user.qualities.map(quality => {
-                    return <span key={quality._id} className={`badge m-1 bg-${quality.color}`}>{quality.name}</span>
-                })}
+                <QualitiesList user={user} />
                 <h4>{`Завершено встреч: ${user.completedMeetings}`}</h4>
                 <h2>{`Оценка: ${user.rate}`}</h2>
                 <button onClick={handleReturnToUsers} >Все пользователи</button>
-            </>
+            </div>
         )
         : <Loader loadingTarget={'user'} margin={5} />
 }
