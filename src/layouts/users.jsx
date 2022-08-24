@@ -17,6 +17,22 @@ const Users = () => {
     const [selectedProf, setSelectedProf] = useState(null)
     const [sortBy, setSortBy] = useState({ iter: 'name', order: 'asc' })
     const pageSize = 8
+    const [search, setSearch] = useState('')
+    const [searchUsers, setSearchUsers] = useState([])
+
+    useEffect(() => {
+        const regExp = new RegExp(search, 'gi')
+        if (!isUsersLoading) {
+            const initialUsers = [...users]
+            setSearchUsers(initialUsers.filter((user) => regExp.test(user.name)))
+        }
+    }, [search, users])
+
+    const handleSearchChange = (event) => {
+        const { value } = event.target
+        setSearch(value)
+        setSelectedProf(null)
+    }
 
     useEffect(() => {
         api.users.fetchAll().then((data) => {
@@ -53,13 +69,14 @@ const Users = () => {
 
     if (!isUsersLoading) {
         const filteredUsers = selectedProf
-            ? users.filter(user => user.profession._id === selectedProf._id)
-            : users
+            ? searchUsers.filter(user => user.profession._id === selectedProf._id)
+            : searchUsers
         const usersCount = filteredUsers.length
         const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order])
         const usersCrop = paginate(sortedUsers, currentPage, pageSize)
 
         const handleProfessionSelect = (item) => {
+            setSearch('')
             setSelectedProf(item)
             setCurrentPage(1)
         }
@@ -98,6 +115,7 @@ const Users = () => {
                     )}
                 <div className="d-flex flex-column">
                     <SearchStatus length={usersCount}/>
+                    <input type="text" placeholder="search..." name="search" onChange={handleSearchChange} value={search}/>
                     <UsersTable
                         users={usersCrop}
                         onDelete={handleDelete}
