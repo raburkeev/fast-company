@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import api from '../api/index'
-import Loader from './loader'
+import api from '../../../api'
+import Loader from '../../common/loader'
 import { useHistory, useParams } from 'react-router-dom'
-import QualitiesList from './qualitiesList'
+import QualitiesList from '../../ui/qualities/qualitiesList'
 
 const UserPage = () => {
     const [user, setUser] = useState({})

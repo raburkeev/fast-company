@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import BookMark from './bookmark'
-import QualitiesList from './qualitiesList'
-import Table from './table'
+import BookMark from '../common/bookmark'
+import QualitiesList from './qualities'
+import Table from '../common/table'
 import { Link } from 'react-router-dom'
 
 const UsersTable = ({ users, onDelete, onToggleBookMark, onSort, selectedSort }) => {

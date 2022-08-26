@@ -10,7 +10,7 @@ const BookMark = ({ onToggleBookMark, userId, user }) => {
         <button className="btn btn-light" onClick={handleToggleBookMark}>
             <i
                 className={`bi bi-bookmark-star${user.bookmark ? '-fill' : ''}`}
-            ></i>
+            />
         </button>
     )
 }
