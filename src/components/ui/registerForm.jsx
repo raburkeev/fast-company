@@ -38,6 +38,13 @@ const RegisterForm = () => {
         })
     }, [])
 
+    const handleChange = (target) => {
+        setData((prevState) => ({
+            ...prevState,
+            [target.name]: target.value
+        }))
+    }
+
     const validatorConfig = {
         email: {
             isRequired: { message: 'Электронная почта обязательна для заполнения' },
@@ -68,13 +75,6 @@ const RegisterForm = () => {
     }
 
     const isValid = Object.keys(errors).length === 0
-
-    const handleChange = (target) => {
-        setData((prevState) => ({
-            ...prevState,
-            [target.name]: target.value
-        }))
-    }
 
     const handleSubmit = (event) => {
         event.preventDefault()
