@@ -1,37 +1,24 @@
 import React, { useEffect, useState } from 'react'
-// import { useHistory } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
+import * as yup from 'yup'
 import TextField from '../common/form/textField'
 import api from '../../api'
 import Loader from '../common/loader'
-import PropTypes from 'prop-types'
 import SelectField from '../common/form/selectField'
 import RadioField from '../common/form/radioField'
 import MultiSelectField from '../common/form/multiSelectField'
 
-const UserEditForm = ({ id, setIsEditMode }) => {
+const UserEditForm = () => {
     const [user, setUser] = useState({})
     const [professions, setProfessions] = useState([])
     const [qualities, setQualities] = useState([])
-    // const history = useHistory()
-    const defaultQualityOptions = []
-    console.log(user)
-
-    if (JSON.stringify(user) !== '{}' && JSON.stringify(qualities) !== '[]') {
-        qualities.forEach((q) => {
-            user.qualities.forEach(userQ => {
-                if (q.label === userQ.name) {
-                    defaultQualityOptions.push({
-                        label: q.label,
-                        value: q.value
-                    })
-                }
-            })
-        })
-        console.log('qual', user)
-    }
+    const [errors, setErrors] = useState({})
+    const history = useHistory()
+    const params = useParams()
+    const { userId } = params
 
     useEffect(() => {
-        api.users.getById(id).then((data) => {
+        api.users.getById(userId).then((data) => {
             if (typeof data !== 'undefined') {
                 setUser(data)
             }
@@ -53,6 +40,18 @@ const UserEditForm = ({ id, setIsEditMode }) => {
         })
     }, [])
 
+    const validateSchema = yup.object().shape({
+        email: yup.string().required('Электронная почта обязательна для заполнения').email('Email введен некорректно'),
+        name: yup.string().required('Имя обязательно для заполнения')
+    })
+    console.log(validateSchema)
+    console.log(user)
+
+    const validate = () => {
+        validateSchema.validate(user).then(() => setErrors({})).catch((err) => setErrors({ [err.path]: err.message }))
+        return Object.keys(errors).length === 0
+    }
+
     const handleChange = (target) => {
         setUser(prevState => ({
             ...prevState,
@@ -62,13 +61,17 @@ const UserEditForm = ({ id, setIsEditMode }) => {
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        const { profession, qualities } = user
-        api.users.update(id, {
+
+        const isValid = validate()
+        console.log(isValid)
+        if (!isValid) return
+
+        api.users.update(userId, {
             ...user,
             qualities: getQualities(qualities),
-            profession: getProfessionById(profession)
+            profession: getProfessionById(user.profession._id)
         })
-        setIsEditMode(false)
+        history.push(`/users/${userId}`)
     }
 
     const getQualities = (elements) => {
@@ -102,8 +105,20 @@ const UserEditForm = ({ id, setIsEditMode }) => {
                     <div className="col-md-6 offset-md-3 p-4 shadow">
                         <form onSubmit={handleSubmit}>
                             <h1>Edit</h1>
-                            <TextField label="Имя:" onChange={handleChange} value={user.name} name="name" />
-                            <TextField label="Электронная почта:" onChange={handleChange} value={user.email} name="email" />
+                            <TextField
+                                label="Имя:"
+                                onChange={handleChange}
+                                value={user.name}
+                                name="name"
+                                error={errors.name}
+                            />
+                            <TextField
+                                label="Электронная почта:"
+                                onChange={handleChange}
+                                value={user.email}
+                                name="email"
+                                error={errors.email}
+                            />
                             <SelectField
                                 label="Профессия:"
                                 value={user.profession._id}
@@ -128,7 +143,7 @@ const UserEditForm = ({ id, setIsEditMode }) => {
                                 label="Ваши качества:"
                                 onChange={handleChange}
                                 name="qualities"
-                                defaultValue={defaultQualityOptions}
+                                defaultValue={qualities}
                             />
                             <button className="btn btn-primary w-100 mx-auto">Обновить</button>
                         </form>
@@ -137,11 +152,6 @@ const UserEditForm = ({ id, setIsEditMode }) => {
             </div>
         )
         : <Loader loadingTarget={'user'} margin={5} />
-}
-
-UserEditForm.propTypes = {
-    id: PropTypes.string.isRequired,
-    setIsEditMode: PropTypes.func.isRequired
 }
 
 export default UserEditForm
