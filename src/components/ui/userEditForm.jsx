@@ -16,6 +16,8 @@ const UserEditForm = () => {
     const history = useHistory()
     const params = useParams()
     const { userId } = params
+    console.log('user', user.qualities)
+    console.log('all', qualities)
 
     useEffect(() => {
         api.users.getById(userId).then((data) => {
@@ -44,8 +46,6 @@ const UserEditForm = () => {
         email: yup.string().required('Электронная почта обязательна для заполнения').email('Email введен некорректно'),
         name: yup.string().required('Имя обязательно для заполнения')
     })
-    console.log(validateSchema)
-    console.log(user)
 
     const validate = () => {
         validateSchema.validate(user).then(() => setErrors({})).catch((err) => setErrors({ [err.path]: err.message }))
@@ -63,12 +63,11 @@ const UserEditForm = () => {
         event.preventDefault()
 
         const isValid = validate()
-        console.log(isValid)
         if (!isValid) return
 
         api.users.update(userId, {
             ...user,
-            qualities: getQualities(qualities),
+            qualities: getQualities(getUserQualitiesFormat(qualities)),
             profession: getProfessionById(user.profession._id)
         })
         history.push(`/users/${userId}`)
@@ -96,6 +95,22 @@ const UserEditForm = () => {
                 return { _id: prof.value, name: prof.label }
             }
         }
+    }
+
+    const getUserQualitiesFormat = (qualities) => {
+        const formatQualities = []
+        for (const quality of qualities) {
+            for (const userQ of user.qualities) {
+                if (quality.value === userQ._id) {
+                    formatQualities.push({
+                        label: userQ.name,
+                        value: userQ._id,
+                        color: userQ.color
+                    })
+                }
+            }
+        }
+        return formatQualities
     }
 
     return JSON.stringify(user) !== '{}'
@@ -143,7 +158,7 @@ const UserEditForm = () => {
                                 label="Ваши качества:"
                                 onChange={handleChange}
                                 name="qualities"
-                                defaultValue={qualities}
+                                defaultValue={getUserQualitiesFormat(qualities)}
                             />
                             <button className="btn btn-primary w-100 mx-auto">Обновить</button>
                         </form>
