@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
+import React, {useEffect, useState} from 'react'
+import {useParams, useHistory} from 'react-router-dom'
 import * as yup from 'yup'
 import TextField from '../common/form/textField'
 import api from '../../api'
@@ -21,12 +21,12 @@ const UserEditForm = () => {
     const [errors, setErrors] = useState({})
     const [isLoaded, setIsLoaded] = useState(false)
     const history = useHistory()
-    const { userId } = useParams()
+    const {userId} = useParams()
 
     const getProfessionById = (id) => {
         for (const prof of professions) {
             if (prof.value === id) {
-                return { _id: prof.value, name: prof.label }
+                return {_id: prof.value, name: prof.label}
             }
         }
     }
@@ -51,7 +51,7 @@ const UserEditForm = () => {
         event.preventDefault()
         const isValid = validate()
         if (!isValid) return
-        const { profession, qualities } = data
+        const {profession, qualities} = data
         api.users.update(userId, {
             ...data,
             qualities: getQualities(qualities),
@@ -61,7 +61,7 @@ const UserEditForm = () => {
     }
 
     const transformData = (data) => {
-        return data.map(qual => ({ label: qual.name, value: qual._id }))
+        return data.map(qual => ({label: qual.name, value: qual._id}))
     }
 
     useEffect(() => {
@@ -106,7 +106,7 @@ const UserEditForm = () => {
     const validate = () => {
         validateSchema.validate(data)
             .then(() => setErrors({}))
-            .catch((err) => setErrors({ [err.path]: err.message }))
+            .catch((err) => setErrors({[err.path]: err.message}))
         return Object.keys(errors).length === 0
     }
 
@@ -154,9 +154,9 @@ const UserEditForm = () => {
                             />
                             <RadioField
                                 options={[
-                                    { name: 'Male', value: 'male' },
-                                    { name: 'Female', value: 'female' },
-                                    { name: 'Other', value: 'other' }
+                                    {name: 'Male', value: 'male'},
+                                    {name: 'Female', value: 'female'},
+                                    {name: 'Other', value: 'other'}
                                 ]}
                                 label="Выберите ваш пол:"
                                 value={data.sex}
@@ -176,7 +176,7 @@ const UserEditForm = () => {
                 </div>
             </div>
         )
-        : <Loader loadingTarget={'user'} margin={5} />
+        : <Loader loadingTarget={'user'} margin={5}/>
 }
 
 export default UserEditForm

@@ -19,6 +19,7 @@ module.exports = {
             { anonymous: 'always', named: 'never' }
         ],
         quotes: ['error', 'single', { allowTemplateLiterals: true }],
-        'multiline-ternary': ["off"]
+        'multiline-ternary': ["off"],
+        'object-curly-spacing': ["error", "never"]
     }
 }

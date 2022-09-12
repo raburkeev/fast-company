@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import PropTypes from 'prop-types'
 
-const TextField = ({ label, type, name, value, onChange, error }) => {
+const TextField = ({label, type, name, value, onChange, error}) => {
     const [showPassword, setShowPassword] = useState(false)
 
-    const handleChange = ({ target }) => {
-        onChange({ name: target.name, value: target.value })
+    const handleChange = ({target}) => {
+        onChange({name: target.name, value: target.value})
     }
 
     const getInputClasses = () => {
@@ -30,7 +30,7 @@ const TextField = ({ label, type, name, value, onChange, error }) => {
                 />
                 {type === 'password' && (
                     <button className="btn btn-outline-secondary" type="button" onClick={toggleShowPassword}>
-                        <i className={`bi bi-eye${showPassword ? '-slash' : ''}`} />
+                        <i className={`bi bi-eye${showPassword ? '-slash' : ''}`}/>
                     </button>
 
                 )}

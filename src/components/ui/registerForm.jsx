@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { validator } from '../../utils/validator'
+import React, {useEffect, useState} from 'react'
+import {validator} from '../../utils/validator'
 import TextField from '../common/form/textField'
 import api from '../../api'
 import SelectField from '../common/form/selectField'
@@ -47,20 +47,20 @@ const RegisterForm = () => {
 
     const validatorConfig = {
         email: {
-            isRequired: { message: 'Электронная почта обязательна для заполнения' },
-            isEmail: { message: 'Email введен некорректно' }
+            isRequired: {message: 'Электронная почта обязательна для заполнения'},
+            isEmail: {message: 'Email введен некорректно'}
         },
         password: {
-            isRequired: { message: 'Пароль обязателен для заполнения' },
-            isCapitalSymbol: { message: 'Пароль должен содержать хотя бы одну заглавную букву' },
-            isContainDigit: { message: 'Пароль должен содержать хотя бы одну цифру' },
-            minLength: { message: 'Пароль должен быть не менее 8 символов', value: 8 }
+            isRequired: {message: 'Пароль обязателен для заполнения'},
+            isCapitalSymbol: {message: 'Пароль должен содержать хотя бы одну заглавную букву'},
+            isContainDigit: {message: 'Пароль должен содержать хотя бы одну цифру'},
+            minLength: {message: 'Пароль должен быть не менее 8 символов', value: 8}
         },
         profession: {
-            isRequired: { message: 'Обязательно выберите вашу профессию' }
+            isRequired: {message: 'Обязательно выберите вашу профессию'}
         },
         licence: {
-            isRequired: { message: 'Вы не можете использовать наш сервис без подтвержения лицензионного соглашения' }
+            isRequired: {message: 'Вы не можете использовать наш сервис без подтвержения лицензионного соглашения'}
         }
     }
 
@@ -80,7 +80,7 @@ const RegisterForm = () => {
         event.preventDefault()
         const isValid = validate()
         if (!isValid) return
-        const { profession, qualities } = data
+        const {profession, qualities} = data
         console.log({
             ...data,
             profession: getProfessionById(profession),
@@ -91,7 +91,7 @@ const RegisterForm = () => {
     const getProfessionById = (id) => {
         for (const prof of professions) {
             if (prof.value === id) {
-                return { _id: prof.value, name: prof.label }
+                return {_id: prof.value, name: prof.label}
             }
         }
     }
@@ -140,9 +140,9 @@ const RegisterForm = () => {
             />
             <RadioField
                 options={[
-                    { name: 'Male', value: 'male' },
-                    { name: 'Female', value: 'female' },
-                    { name: 'Other', value: 'other' }
+                    {name: 'Male', value: 'male'},
+                    {name: 'Female', value: 'female'},
+                    {name: 'Other', value: 'other'}
                 ]}
                 label="Выберите ваш пол:"
                 value={data.sex}

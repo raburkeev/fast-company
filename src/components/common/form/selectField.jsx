@@ -1,14 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const SelectField = ({ label, value, onChange, defaultOption, options, error, name }) => {
+const SelectField = ({label, value, onChange, defaultOption, options, error, name}) => {
     const optionsArray =
         !Array.isArray(options) && typeof options === 'object'
             ? Object.values(options)
             : options
 
-    const handleChange = ({ target }) => {
-        onChange({ name: target.name, value: target.value })
+    const handleChange = ({target}) => {
+        onChange({name: target.name, value: target.value})
     }
 
     const getInputClasses = () => {

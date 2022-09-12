@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 import api from '../../../api'
 import Loader from '../../common/loader'
 import QualitiesList from '../../ui/qualities/qualitiesList'
-import { Link } from 'react-router-dom'
+import {Link} from 'react-router-dom'
 
-const UserPage = ({ id }) => {
+const UserPage = ({id}) => {
     const [user, setUser] = useState({})
 
     useEffect(() => {
