@@ -9,68 +9,26 @@ import RadioField from '../common/form/radioField'
 import MultiSelectField from '../common/form/multiSelectField'
 
 const UserEditForm = () => {
-    const [user, setUser] = useState({})
-    const [professions, setProfessions] = useState([])
-    const [qualities, setQualities] = useState([])
-    const [errors, setErrors] = useState({})
-    const history = useHistory()
-    const params = useParams()
-    const { userId } = params
-    console.log('user', user.qualities)
-    console.log('all', qualities)
-
-    useEffect(() => {
-        api.users.getById(userId).then((data) => {
-            if (typeof data !== 'undefined') {
-                setUser(data)
-            }
-        })
-        api.professions.fetchAll().then(data => {
-            const professionsList = Object.keys(data).map((professionName) => ({
-                label: data[professionName].name,
-                value: data[professionName]._id
-            }))
-            setProfessions(professionsList)
-        })
-        api.qualities.fetchAll().then(data => {
-            const qualitiesList = Object.keys(data).map((optionName) => ({
-                label: data[optionName].name,
-                value: data[optionName]._id,
-                color: data[optionName].color
-            }))
-            setQualities(qualitiesList)
-        })
-    }, [])
-
-    const validateSchema = yup.object().shape({
-        email: yup.string().required('Электронная почта обязательна для заполнения').email('Email введен некорректно'),
-        name: yup.string().required('Имя обязательно для заполнения')
+    const [data, setData] = useState({
+        name: '',
+        email: '',
+        profession: {},
+        sex: '',
+        qualities: []
     })
+    const [professions, setProfessions] = useState([])
+    const [qualities, setQualities] = useState({})
+    const [errors, setErrors] = useState({})
+    const [isLoaded, setIsLoaded] = useState(false)
+    const history = useHistory()
+    const { userId } = useParams()
 
-    const validate = () => {
-        validateSchema.validate(user).then(() => setErrors({})).catch((err) => setErrors({ [err.path]: err.message }))
-        return Object.keys(errors).length === 0
-    }
-
-    const handleChange = (target) => {
-        setUser(prevState => ({
-            ...prevState,
-            [target.name]: target.value
-        }))
-    }
-
-    const handleSubmit = (event) => {
-        event.preventDefault()
-
-        const isValid = validate()
-        if (!isValid) return
-
-        api.users.update(userId, {
-            ...user,
-            qualities: getQualities(getUserQualitiesFormat(qualities)),
-            profession: getProfessionById(user.profession._id)
-        })
-        history.push(`/users/${userId}`)
+    const getProfessionById = (id) => {
+        for (const prof of professions) {
+            if (prof.value === id) {
+                return { _id: prof.value, name: prof.label }
+            }
+        }
     }
 
     const getQualities = (elements) => {
@@ -89,31 +47,83 @@ const UserEditForm = () => {
         return qualitiesArray
     }
 
-    const getProfessionById = (id) => {
-        for (const prof of professions) {
-            if (prof.value === id) {
-                return { _id: prof.value, name: prof.label }
-            }
-        }
+    const handleSubmit = (event) => {
+        event.preventDefault()
+        const isValid = validate()
+        if (!isValid) return
+        const { profession, qualities } = data
+        api.users.update(userId, {
+            ...data,
+            qualities: getQualities(qualities),
+            profession: getProfessionById(profession)
+        }).then(() => history.push(`/users/${userId}`))
+        console.log(data)
     }
 
-    const getUserQualitiesFormat = (qualities) => {
-        const formatQualities = []
-        for (const quality of qualities) {
-            for (const userQ of user.qualities) {
-                if (quality.value === userQ._id) {
-                    formatQualities.push({
-                        label: userQ.name,
-                        value: userQ._id,
-                        color: userQ.color
-                    })
-                }
-            }
-        }
-        return formatQualities
+    const transformData = (data) => {
+        return data.map(qual => ({ label: qual.name, value: qual._id }))
     }
 
-    return JSON.stringify(user) !== '{}'
+    useEffect(() => {
+        Promise.all([api.users.getById(userId), api.qualities.fetchAll(), api.professions.fetchAll()]).then(data => {
+            const userData = data[0]
+            setData(prevState => ({
+                ...prevState,
+                ...userData,
+                qualities: transformData(userData.qualities),
+                profession: userData.profession._id
+            }))
+
+            const qualitiesData = data[1]
+            const qualitiesList = Object.keys(qualitiesData).map(optionName => ({
+                label: qualitiesData[optionName].name,
+                value: qualitiesData[optionName]._id,
+                color: qualitiesData[optionName].color
+            }))
+            setQualities(qualitiesList)
+
+            const professionsData = data[2]
+            const professionsList = Object.keys(professionsData).map(professionName => ({
+                label: professionsData[professionName].name,
+                value: professionsData[professionName]._id
+            }))
+            setProfessions(professionsList)
+        })
+    }, [])
+    console.log(data)
+
+    useEffect(() => {
+        if (data._id) {
+            setIsLoaded(true)
+        }
+    }, [data])
+
+    const validateSchema = yup.object().shape({
+        email: yup.string().required('Электронная почта обязательна для заполнения').email('Email введен некорректно'),
+        name: yup.string().required('Имя обязательно для заполнения')
+    })
+
+    const validate = () => {
+        validateSchema.validate(data)
+            .then(() => setErrors({}))
+            .catch((err) => setErrors({ [err.path]: err.message }))
+        return Object.keys(errors).length === 0
+    }
+
+    useEffect(() => {
+        validate()
+    }, [data])
+
+    const handleChange = (target) => {
+        setData(prevState => ({
+            ...prevState,
+            [target.name]: target.value
+        }))
+    }
+
+    const isValid = Object.keys(errors).length
+
+    return isLoaded
         ? (
             <div className="container mt-5">
                 <div className="row">
@@ -123,23 +133,23 @@ const UserEditForm = () => {
                             <TextField
                                 label="Имя:"
                                 onChange={handleChange}
-                                value={user.name}
+                                value={data.name}
                                 name="name"
                                 error={errors.name}
                             />
                             <TextField
                                 label="Электронная почта:"
                                 onChange={handleChange}
-                                value={user.email}
+                                value={data.email}
                                 name="email"
                                 error={errors.email}
                             />
                             <SelectField
-                                label="Профессия:"
-                                value={user.profession._id}
+                                label="Выбери свою профессию:"
+                                value={data.profession}
                                 onChange={handleChange}
                                 defaultOption="Choose..."
-                                options={professions}
+                                options={(professions)}
                                 name="profession"
                             />
                             <RadioField
@@ -149,7 +159,7 @@ const UserEditForm = () => {
                                     { name: 'Other', value: 'other' }
                                 ]}
                                 label="Выберите ваш пол:"
-                                value={user.sex}
+                                value={data.sex}
                                 name="sex"
                                 onChange={handleChange}
                             />
@@ -158,9 +168,9 @@ const UserEditForm = () => {
                                 label="Ваши качества:"
                                 onChange={handleChange}
                                 name="qualities"
-                                defaultValue={getUserQualitiesFormat(qualities)}
+                                defaultValue={data.qualities}
                             />
-                            <button className="btn btn-primary w-100 mx-auto">Обновить</button>
+                            <button className="btn btn-primary w-100 mx-auto" disabled={isValid}>Обновить</button>
                         </form>
                     </div>
                 </div>
