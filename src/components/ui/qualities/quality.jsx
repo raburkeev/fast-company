@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const Quality = ({ quality }) => {
+const Quality = ({quality}) => {
     return (
         <span
             className={`badge m-1 bg-${quality.color}`}

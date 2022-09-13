@@ -1,10 +1,10 @@
 import React from 'react'
-import { Switch, Route, Redirect } from 'react-router-dom'
+import {Redirect, Route, Switch} from 'react-router-dom'
 import Users from './layouts/users'
-import NavBar from './components/navBar'
+import NavBar from './components/ui/navBar'
 import Main from './layouts/main'
 import Login from './layouts/login'
-import UserPage from './components/userPage'
+import UserEditForm from './components/ui/userEditForm'
 
 const App = () => {
     return (
@@ -12,9 +12,9 @@ const App = () => {
             <NavBar />
             <Switch>
                 <Route path="/" exact component={Main} />
-                <Route path="/login" component={Login} />
-                <Route path="/users" exact component={Users} />
-                <Route path="/users/:userId?" component={UserPage} />
+                <Route path="/login/:type?" component={Login} />
+                <Route path="/users/:userId?" exact component={Users} />
+                <Route path="/users/:userId/edit" component={UserEditForm} />
                 <Redirect to="/" />
             </Switch>
 

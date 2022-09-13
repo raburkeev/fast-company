@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const BookMark = ({ onToggleBookMark, userId, user }) => {
+const BookMark = ({onToggleBookMark, userId, user}) => {
     const handleToggleBookMark = () => {
         onToggleBookMark(userId)
     }
@@ -10,7 +10,7 @@ const BookMark = ({ onToggleBookMark, userId, user }) => {
         <button className="btn btn-light" onClick={handleToggleBookMark}>
             <i
                 className={`bi bi-bookmark-star${user.bookmark ? '-fill' : ''}`}
-            ></i>
+            />
         </button>
     )
 }

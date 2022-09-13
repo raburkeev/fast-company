@@ -1,19 +1,19 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Quality from './qualitie'
+import Quality from './quality'
 
-const QualitiesList = ({ user }) => {
+const Qualities = ({user}) => {
     return (
         <>
             {user.qualities.map((quality) => {
-                return <Quality quality={quality} key={quality._id} />
+                return <Quality quality={quality} key={quality._id}/>
             })}
         </>
     )
 }
 
-QualitiesList.propTypes = {
+Qualities.propTypes = {
     user: PropTypes.object.isRequired
 }
 
-export default QualitiesList
+export default Qualities
