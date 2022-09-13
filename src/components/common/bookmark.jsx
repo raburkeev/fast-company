@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const BookMark = ({ onToggleBookMark, userId, user }) => {
+const BookMark = ({onToggleBookMark, userId, user}) => {
     const handleToggleBookMark = () => {
         onToggleBookMark(userId)
     }

@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import React, {useState} from 'react'
+import {useParams} from 'react-router-dom'
 import LoginForm from '../components/ui/loginForm'
 import RegisterForm from '../components/ui/registerForm'
 
 const Login = () => {
-    const { type } = useParams()
+    const {type} = useParams()
     const [formType, setFormType] = useState(type === 'register' ? type : 'login')
 
     const toggleFormType = () => {
@@ -18,7 +18,7 @@ const Login = () => {
                     {formType === 'register'
                         ? <>
                             <h3 className="mb-4">Register</h3>
-                            <RegisterForm />
+                            <RegisterForm/>
                             <p>Already have account? <a role="button" onClick={toggleFormType}>Sign in</a></p>
                         </>
                         : <>
@@ -29,7 +29,6 @@ const Login = () => {
                 </div>
             </div>
         </div>
-
     )
 }
 

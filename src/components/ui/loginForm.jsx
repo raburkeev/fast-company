@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { validator } from '../../utils/validator'
+import React, {useEffect, useState} from 'react'
+import {validator} from '../../utils/validator'
 import TextField from '../common/form/textField'
 import CheckBoxField from '../common/form/checkBoxField'
 
@@ -13,14 +13,14 @@ const LoginForm = () => {
 
     const validatorConfig = {
         email: {
-            isRequired: { message: 'Электронная почта обязательна для заполнения' },
-            isEmail: { message: 'Email введен некорректно' }
+            isRequired: {message: 'Электронная почта обязательна для заполнения'},
+            isEmail: {message: 'Email введен некорректно'}
         },
         password: {
-            isRequired: { message: 'Пароль обязателен для заполнения' },
-            isCapitalSymbol: { message: 'Пароль должен содержать хотя бы одну заглавную букву' },
-            isContainDigit: { message: 'Пароль должен содержать хотя бы одну цифру' },
-            minLength: { message: 'Пароль должен быть не менее 8 символов', value: 8 }
+            isRequired: {message: 'Пароль обязателен для заполнения'},
+            isCapitalSymbol: {message: 'Пароль должен содержать хотя бы одну заглавную букву'},
+            isContainDigit: {message: 'Пароль должен содержать хотя бы одну цифру'},
+            minLength: {message: 'Пароль должен быть не менее 8 символов', value: 8}
         }
     }
 

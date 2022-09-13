@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const SearchStatus = ({ length }) => {
+const SearchStatus = ({length}) => {
     const getFormatOfWordsInPhrase = (number) => {
         return [2, 3, 4].includes(number)
             ? 'человека тусанут'

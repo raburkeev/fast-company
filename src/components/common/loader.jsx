@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const Loader = ({ loadingTarget, margin }) => {
+const Loader = ({loadingTarget, margin}) => {
     const getMarginForLoader = () => {
         return [1, 2, 3, 4, 5].includes(margin)
             ? `d-flex align-items-center m-${margin}`

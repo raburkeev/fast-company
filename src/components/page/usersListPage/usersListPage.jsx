@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import api from '../../../api'
 import _ from 'lodash'
-import { paginate } from '../../../utils/paginate'
+import {paginate} from '../../../utils/paginate'
 import Loader from '../../common/loader'
 import GroupList from '../../common/groupList'
 import SearchStatus from '../../ui/searchStatus'
@@ -15,7 +15,7 @@ const UsersListPage = () => {
     const [isGroupListLoading, setIsGroupListLoading] = useState(true)
     const [currentPage, setCurrentPage] = useState(1)
     const [selectedProf, setSelectedProf] = useState(null)
-    const [sortBy, setSortBy] = useState({ iter: 'name', order: 'asc' })
+    const [sortBy, setSortBy] = useState({iter: 'name', order: 'asc'})
     const pageSize = 8
     const [search, setSearch] = useState('')
     const [searchUsers, setSearchUsers] = useState([])
@@ -29,7 +29,7 @@ const UsersListPage = () => {
     }, [search, users])
 
     const handleSearchChange = (event) => {
-        const { value } = event.target
+        const {value} = event.target
         setSearch(value)
         setSelectedProf(null)
     }
@@ -115,7 +115,8 @@ const UsersListPage = () => {
                     )}
                 <div className="d-flex flex-column">
                     <SearchStatus length={usersCount}/>
-                    <input type="text" placeholder="search..." name="search" onChange={handleSearchChange} value={search}/>
+                    <input type="text" placeholder="search..." name="search" onChange={handleSearchChange}
+                        value={search}/>
                     <UsersTable
                         users={usersCrop}
                         onDelete={handleDelete}
@@ -135,7 +136,7 @@ const UsersListPage = () => {
             </div>
         )
     }
-    return <Loader loadingTarget={'users'} margin={5} />
+    return <Loader loadingTarget={'users'} margin={5}/>
 }
 
 export default UsersListPage

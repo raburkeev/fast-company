@@ -1,4 +1,4 @@
-import { professionsObject as professions } from './professions.api'
+import {professionsObject as professions} from './professions.api'
 
 const qualities = {
     tedious: {
@@ -182,7 +182,7 @@ const update = (id, data) =>
     new Promise((resolve) => {
         const users = JSON.parse(localStorage.getItem('users'))
         const userIndex = users.findIndex((u) => u._id === id)
-        users[userIndex] = { ...users[userIndex], ...data }
+        users[userIndex] = {...users[userIndex], ...data}
         localStorage.setItem('users', JSON.stringify(users))
         resolve(users[userIndex])
     })
