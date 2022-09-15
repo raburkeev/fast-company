@@ -4,9 +4,10 @@ import * as yup from 'yup'
 import api from '../../../api'
 import SelectField from '../form/selectField'
 import TextAreaField from '../form/textAreaField'
+const initialData = {userId: '', content: ''}
 
 const AddCommentForm = ({userId, comments, setComments}) => {
-    const [data, setData] = useState({userId: '', content: ''})
+    const [data, setData] = useState(initialData)
     const [users, setUsers] = useState({})
     const [errors, setErrors] = useState({})
     useEffect(() => {
@@ -24,6 +25,7 @@ const AddCommentForm = ({userId, comments, setComments}) => {
         const isValid = validate()
         if (!isValid) return
         api.comments.add({...data, pageId: userId}).then(data => setComments([...comments, data]))
+        setData(initialData)
     }
     const validateSchema = yup.object().shape({
         content: yup.string().required('Поле обязательно для заполнения'),
