@@ -4,7 +4,7 @@ import Users from './layouts/users'
 import NavBar from './components/ui/navBar'
 import Main from './layouts/main'
 import Login from './layouts/login'
-import UserEditForm from './components/ui/userEditForm'
+import EditUserPage from './components/page/editUserPage'
 
 const App = () => {
     return (
@@ -14,7 +14,7 @@ const App = () => {
                 <Route path="/" exact component={Main} />
                 <Route path="/login/:type?" component={Login} />
                 <Route path="/users/:userId?" exact component={Users} />
-                <Route path="/users/:userId/edit" component={UserEditForm} />
+                <Route path="/users/:userId/edit" component={EditUserPage} />
                 <Redirect to="/" />
             </Switch>
 
