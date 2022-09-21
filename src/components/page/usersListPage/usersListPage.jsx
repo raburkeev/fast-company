@@ -7,10 +7,11 @@ import GroupList from '../../common/groupList'
 import SearchStatus from '../../ui/searchStatus'
 import UsersTable from '../../ui/usersTable'
 import Pagination from '../../common/pagination'
+import {useUser} from '../../../hooks/useUsers'
 
 const UsersListPage = () => {
-    const [users, setUsers] = useState([])
-    const [isUsersLoading, setIsUsersLoading] = useState(true)
+    const {users} = useUser()
+
     const [professions, setProfessions] = useState([])
     const [isGroupListLoading, setIsGroupListLoading] = useState(true)
     const [currentPage, setCurrentPage] = useState(1)
@@ -22,7 +23,7 @@ const UsersListPage = () => {
 
     useEffect(() => {
         const regExp = new RegExp(search, 'gi')
-        if (!isUsersLoading) {
+        if (JSON.stringify(users) !== '[]') {
             const initialUsers = [...users]
             setSearchUsers(initialUsers.filter((user) => regExp.test(user.name)))
         }
@@ -35,13 +36,6 @@ const UsersListPage = () => {
     }
 
     useEffect(() => {
-        api.users.fetchAll().then((data) => {
-            setIsUsersLoading(false)
-            setUsers(data)
-        })
-    }, [])
-
-    useEffect(() => {
         api.professions.fetchAll().then(data => {
             setIsGroupListLoading(false)
             setProfessions(data)
@@ -49,14 +43,16 @@ const UsersListPage = () => {
     }, [])
 
     const handleDelete = (userId) => {
-        setUsers(users.filter(user => user._id !== userId))
+        // setUsers(users.filter(user => user._id !== userId))
+        console.log(userId)
     }
 
     const handleToggleBookMark = (userId) => {
         const updatedState = [...users]
         const userFoundById = updatedState.find((user) => user._id === userId)
         userFoundById.bookmark = !userFoundById.bookmark
-        setUsers(updatedState)
+        // setUsers(updatedState)
+        console.log(updatedState)
     }
 
     const handlePageChange = (pageIndex) => {
@@ -67,7 +63,7 @@ const UsersListPage = () => {
         setSortBy(item)
     }
 
-    if (!isUsersLoading) {
+    if (JSON.stringify(users) !== '[]') {
         const filteredUsers = selectedProf
             ? searchUsers.filter(user => user.profession._id === selectedProf._id)
             : searchUsers
