@@ -1,14 +1,15 @@
 import React, {useEffect, useState} from 'react'
 import {useParams, useHistory} from 'react-router-dom'
 import * as yup from 'yup'
-import TextField from '../common/form/textField'
-import api from '../../api'
-import Loader from '../common/loader'
-import SelectField from '../common/form/selectField'
-import RadioField from '../common/form/radioField'
-import MultiSelectField from '../common/form/multiSelectField'
+import TextField from '../../common/form/textField'
+import api from '../../../api'
+import Loader from '../../common/loader'
+import SelectField from '../../common/form/selectField'
+import RadioField from '../../common/form/radioField'
+import MultiSelectField from '../../common/form/multiSelectField'
+import BackHistoryButton from '../../common/backHistoryButton'
 
-const UserEditForm = () => {
+const EditUserPage = () => {
     const [data, setData] = useState({
         name: '',
         email: '',
@@ -90,7 +91,6 @@ const UserEditForm = () => {
             setProfessions(professionsList)
         })
     }, [])
-    console.log(data)
 
     useEffect(() => {
         if (data._id) {
@@ -126,6 +126,7 @@ const UserEditForm = () => {
     return isLoaded
         ? (
             <div className="container mt-5">
+                <BackHistoryButton />
                 <div className="row">
                     <div className="col-md-6 offset-md-3 p-4 shadow">
                         <form onSubmit={handleSubmit}>
@@ -179,4 +180,4 @@ const UserEditForm = () => {
         : <Loader loadingTarget={'user'} margin={5}/>
 }
 
-export default UserEditForm
+export default EditUserPage
