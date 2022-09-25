@@ -19,15 +19,6 @@ const UsersListPage = () => {
     const [sortBy, setSortBy] = useState({iter: 'name', order: 'asc'})
     const pageSize = 8
     const [search, setSearch] = useState('')
-    const [searchUsers, setSearchUsers] = useState([])
-
-    useEffect(() => {
-        const regExp = new RegExp(search, 'gi')
-        if (JSON.stringify(users) !== '[]') {
-            const initialUsers = [...users]
-            setSearchUsers(initialUsers.filter((user) => regExp.test(user.name)))
-        }
-    }, [search, users])
 
     const handleSearchChange = (event) => {
         const {value} = event.target
@@ -64,15 +55,19 @@ const UsersListPage = () => {
     }
 
     if (JSON.stringify(users) !== '[]') {
-        const filteredUsers = selectedProf
-            ? searchUsers.filter(user => user.profession._id === selectedProf._id)
-            : searchUsers
+        const filteredUsers = search
+            ? users.filter(user => user.name.toLowerCase().includes(search.toLowerCase()))
+            : selectedProf
+                ? users.filter(user => {
+                    return user.profession === selectedProf._id
+                })
+                : users
         const usersCount = filteredUsers.length
         const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order])
         const usersCrop = paginate(sortedUsers, currentPage, pageSize)
 
         const handleProfessionSelect = (item) => {
-            setSearch('')
+            if (search !== '') setSearch('')
             setSelectedProf(item)
             setCurrentPage(1)
         }
