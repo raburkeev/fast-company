@@ -9,26 +9,29 @@ import EditUserPage from './components/page/editUserPage'
 import UserProvider from './hooks/useUsers'
 import {ProfessionProvider} from './hooks/useProfession'
 import {QualityProvider} from './hooks/useQuality'
+import AuthProvider from './hooks/useAuth'
 
 const App = () => {
     return (
-        <>
-            <NavBar />
-            <UserProvider>
-                <QualityProvider>
-                    <ProfessionProvider>
-                        <Switch>
-                            <Route path="/" exact component={Main} />
-                            <Route path="/login/:type?" component={Login} />
-                            <Route path="/users/:userId?" exact component={Users} />
-                            <Route path="/users/:userId/edit" component={EditUserPage} />
-                            <Redirect to="/" />
-                        </Switch>
-                    </ProfessionProvider>
-                </QualityProvider>
-            </UserProvider>
+        <div>
+            <AuthProvider>
+                <NavBar />
+                <UserProvider>
+                    <QualityProvider>
+                        <ProfessionProvider>
+                            <Switch>
+                                <Route path="/" exact component={Main} />
+                                <Route path="/login/:type?" component={Login} />
+                                <Route path="/users/:userId?" exact component={Users} />
+                                <Route path="/users/:userId/edit" component={EditUserPage} />
+                                <Redirect to="/" />
+                            </Switch>
+                        </ProfessionProvider>
+                    </QualityProvider>
+                </UserProvider>
+            </AuthProvider>
             <ToastContainer />
-        </>
+        </div>
     )
 }
 
