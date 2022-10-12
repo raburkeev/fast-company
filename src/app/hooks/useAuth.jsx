@@ -5,7 +5,7 @@ import userService from '../services/user.service'
 import {toast} from 'react-toastify'
 import localStorageService, {setTokens} from '../services/localStorage.service'
 
-const httpAuth = axios.create({
+export const httpAuth = axios.create({
     baseURL: 'https://identitytoolkit.googleapis.com/v1/',
     params: {
         key: process.env.REACT_APP_FIREBASE_KEY
@@ -18,7 +18,7 @@ export const useAuth = () => {
 }
 
 const AuthProvider = ({children}) => {
-    const [currentUser, setCurrentUser] = useState({})
+    const [currentUser, setCurrentUser] = useState(null)
     const [error, setError] = useState(null)
 
     function randomInt(min, max) {
