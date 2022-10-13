@@ -1,5 +1,4 @@
-import React, {useEffect, useState} from 'react'
-import api from '../../../api'
+import React, {useState} from 'react'
 import _ from 'lodash'
 import {paginate} from '../../../utils/paginate'
 import Loader from '../../common/loader'
@@ -7,13 +6,14 @@ import GroupList from '../../common/groupList'
 import SearchStatus from '../../ui/searchStatus'
 import UsersTable from '../../ui/usersTable'
 import Pagination from '../../common/pagination'
-import {useUser} from '../../../hooks/useUsers'
+import {useUsers} from '../../../hooks/useUsers'
+import {useProfessions} from '../../../hooks/useProfession'
+import {useAuth} from '../../../hooks/useAuth'
 
 const UsersListPage = () => {
-    const {users} = useUser()
-
-    const [professions, setProfessions] = useState([])
-    const [isGroupListLoading, setIsGroupListLoading] = useState(true)
+    const {currentUser} = useAuth()
+    const {users} = useUsers()
+    const {professions, isLoading: professionsLoading} = useProfessions()
     const [currentPage, setCurrentPage] = useState(1)
     const [selectedProf, setSelectedProf] = useState(null)
     const [sortBy, setSortBy] = useState({iter: 'name', order: 'asc'})
@@ -25,13 +25,6 @@ const UsersListPage = () => {
         setSearch(value)
         setSelectedProf(null)
     }
-
-    useEffect(() => {
-        api.professions.fetchAll().then(data => {
-            setIsGroupListLoading(false)
-            setProfessions(data)
-        })
-    }, [])
 
     const handleDelete = (userId) => {
         // setUsers(users.filter(user => user._id !== userId))
@@ -55,13 +48,17 @@ const UsersListPage = () => {
     }
 
     if (JSON.stringify(users) !== '[]') {
-        const filteredUsers = search
-            ? users.filter(user => user.name.toLowerCase().includes(search.toLowerCase()))
-            : selectedProf
-                ? users.filter(user => {
-                    return user.profession === selectedProf._id
-                })
-                : users
+        function filterUsers(data) {
+            const filteredUsers = search
+                ? data.filter(user => user.name.toLowerCase().includes(search.toLowerCase()))
+                : selectedProf
+                    ? data.filter(user => {
+                        return user.profession === selectedProf._id
+                    })
+                    : data
+            return filteredUsers.filter(user => user._id !== currentUser._id)
+        }
+        const filteredUsers = filterUsers(users)
         const usersCount = filteredUsers.length
         const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order])
         const usersCrop = paginate(sortedUsers, currentPage, pageSize)
@@ -87,9 +84,8 @@ const UsersListPage = () => {
 
         return (
             <div className="d-flex">
-                {isGroupListLoading
-                    ? <Loader loadingTarget={'filter'} margin={1}/>
-                    : (
+                {professions && !professionsLoading
+                    ? (
                         <div className="d-flex flex-column flex-shrink-0 p-3">
                             <GroupList
                                 items={professions}
@@ -103,7 +99,8 @@ const UsersListPage = () => {
                                 Очистить
                             </button>
                         </div>
-                    )}
+                    )
+                    : <Loader loadingTarget={'filter'} margin={1}/>}
                 <div className="d-flex flex-column">
                     <SearchStatus length={usersCount}/>
                     <input type="text" placeholder="search..." name="search" onChange={handleSearchChange}

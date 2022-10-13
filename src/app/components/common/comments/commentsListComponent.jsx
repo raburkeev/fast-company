@@ -1,14 +1,16 @@
+/*eslint-disable*/
 import React from 'react'
 import PropTypes from 'prop-types'
 import api from '../../../api'
 import CommentComponent from './commentComponent'
 import _ from 'lodash'
 
-const CommentsListComponent = ({comments, setComments}) => {
+const CommentsListComponent = ({comments}) => {
     const handleRemove = (commentId) => {
-        api.comments.remove(commentId).then(id => {
-            setComments(comments.filter(comment => comment._id !== id))
-        })
+        // api.comments.remove(commentId).then(id => {
+        //     setComments(comments.filter(comment => comment._id !== id))
+        // })
+        console.log(commentId)
     }
     const sortedComments = _.orderBy(comments, 'created_at', 'desc')
 
@@ -28,8 +30,7 @@ const CommentsListComponent = ({comments, setComments}) => {
 }
 
 CommentsListComponent.propTypes = {
-    comments: PropTypes.array.isRequired,
-    setComments: PropTypes.func.isRequired
+    comments: PropTypes.array.isRequired
 }
 
 export default CommentsListComponent

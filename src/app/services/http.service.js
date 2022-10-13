@@ -1,4 +1,3 @@
-/*eslint-disable*/
 import axios from 'axios'
 import {toast} from 'react-toastify'
 import configFile from '../config.json'
@@ -28,7 +27,7 @@ http.interceptors.request.use(
                     localId: data.user_id
                 })
             }
-        const accessToken = localStorageService.getAccessToken()
+            const accessToken = localStorageService.getAccessToken()
             if (accessToken) {
                 config.params = {...config.params, auth: accessToken}
             }
