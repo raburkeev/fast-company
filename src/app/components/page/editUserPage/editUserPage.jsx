@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import React, {useEffect, useState} from 'react'
 import {useParams, useHistory} from 'react-router-dom'
 import * as yup from 'yup'
@@ -8,21 +9,46 @@ import SelectField from '../../common/form/selectField'
 import RadioField from '../../common/form/radioField'
 import MultiSelectField from '../../common/form/multiSelectField'
 import BackHistoryButton from '../../common/backHistoryButton'
+import {useProfessions} from '../../../hooks/useProfession'
+import {useQualities} from '../../../hooks/useQuality'
+import {useUsers} from '../../../hooks/useUsers'
 
 const EditUserPage = () => {
-    const [data, setData] = useState({
-        name: '',
-        email: '',
-        profession: {},
-        sex: '',
-        qualities: []
-    })
-    const [professions, setProfessions] = useState([])
-    const [qualities, setQualities] = useState({})
-    const [errors, setErrors] = useState({})
-    const [isLoaded, setIsLoaded] = useState(false)
     const history = useHistory()
     const {userId} = useParams()
+    const {getUserById} = useUsers()
+    const user = getUserById(userId)
+
+
+    const {professions, isLoading: isProfessionsLoading, getProfession} = useProfessions()
+    const professionsList = professions.map(prof => ({
+        label: prof.name,
+        value: prof._id
+    }))
+    const {qualities, isLoading: isQualitiesLoading, getQuality} = useQualities()
+    const qualitiesList = qualities.map(qual => ({
+        label: qual.name,
+        value: qual._id
+    }))
+    const [isDataLoading, setDataLoading] = useState(true)
+    const [errors, setErrors] = useState({})
+
+    useEffect(() => {
+        if (!isProfessionsLoading && !isQualitiesLoading) {
+            setDataLoading(false)
+        }
+    }, [isProfessionsLoading, isQualitiesLoading])
+
+    const [data, setData] = useState({
+        name: user.name,
+        email: user.email,
+        profession: user.profession,
+        sex: user.sex,
+        qualities: user.qualities
+    })
+    const getDefaultQualitiesFormat = (qualities) => {
+        return qualities.map(q => getQuality(q)).map(qual => ({label: qual.name, value: qual._id}))
+    }
 
     const getProfessionById = (id) => {
         for (const prof of professions) {
@@ -61,43 +87,6 @@ const EditUserPage = () => {
         console.log(data)
     }
 
-    const transformData = (data) => {
-        return data.map(qual => ({label: qual.name, value: qual._id}))
-    }
-
-    useEffect(() => {
-        Promise.all([api.users.getById(userId), api.qualities.fetchAll(), api.professions.fetchAll()]).then(data => {
-            const userData = data[0]
-            setData(prevState => ({
-                ...prevState,
-                ...userData,
-                qualities: transformData(userData.qualities),
-                profession: userData.profession._id
-            }))
-
-            const qualitiesData = data[1]
-            const qualitiesList = Object.keys(qualitiesData).map(optionName => ({
-                label: qualitiesData[optionName].name,
-                value: qualitiesData[optionName]._id,
-                color: qualitiesData[optionName].color
-            }))
-            setQualities(qualitiesList)
-
-            const professionsData = data[2]
-            const professionsList = Object.keys(professionsData).map(professionName => ({
-                label: professionsData[professionName].name,
-                value: professionsData[professionName]._id
-            }))
-            setProfessions(professionsList)
-        })
-    }, [])
-
-    useEffect(() => {
-        if (data._id) {
-            setIsLoaded(true)
-        }
-    }, [data])
-
     const validateSchema = yup.object().shape({
         email: yup.string().required('Электронная почта обязательна для заполнения').email('Email введен некорректно'),
         name: yup.string().required('Имя обязательно для заполнения')
@@ -123,10 +112,9 @@ const EditUserPage = () => {
 
     const isValid = Object.keys(errors).length
 
-    return isLoaded
-        ? (
+    return !isDataLoading && (
             <div className="container mt-5">
-                <BackHistoryButton />
+                <BackHistoryButton/>
                 <div className="row">
                     <div className="col-md-6 offset-md-3 p-4 shadow">
                         <form onSubmit={handleSubmit}>
@@ -150,7 +138,7 @@ const EditUserPage = () => {
                                 value={data.profession}
                                 onChange={handleChange}
                                 defaultOption="Choose..."
-                                options={(professions)}
+                                options={professionsList}
                                 name="profession"
                             />
                             <RadioField
@@ -165,19 +153,18 @@ const EditUserPage = () => {
                                 onChange={handleChange}
                             />
                             <MultiSelectField
-                                options={qualities}
+                                options={qualitiesList}
                                 label="Ваши качества:"
                                 onChange={handleChange}
                                 name="qualities"
-                                defaultValue={data.qualities}
+                                defaultValue={getDefaultQualitiesFormat(data.qualities)}
                             />
                             <button className="btn btn-primary w-100 mx-auto" disabled={isValid}>Обновить</button>
                         </form>
                     </div>
                 </div>
             </div>
-        )
-        : <Loader loadingTarget={'user'} margin={5}/>
+    )
 }
 
 export default EditUserPage
