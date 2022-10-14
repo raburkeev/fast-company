@@ -6,18 +6,21 @@ import Loader from '../common/loader'
 import {useComments} from '../../hooks/useComments'
 
 const Comments = ({userId}) => {
-    const {createComment, comments} = useComments()
+    const {createComment, comments, removeComment} = useComments()
 
     const handleSubmit = (data) => {
-        // api.comments.add({...data, pageId: userId}).then(data => setComments([...comments, data]))
         createComment(data)
+    }
+
+    const handleRemove = (commentId) => {
+        removeComment(commentId)
     }
 
     return comments
         ? (
             <>
                 <AddCommentForm onSubmit={handleSubmit}/>
-                <CommentsListComponent userId={userId} comments={comments}/>
+                <CommentsListComponent userId={userId} comments={comments} onRemove={handleRemove}/>
             </>
         )
         : <Loader loadingTarget="comments" />

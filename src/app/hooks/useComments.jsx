@@ -20,7 +20,7 @@ export const CommentsProvider = ({children}) => {
     const [error, setError] = useState(null)
     useEffect(() => {
         getComments()
-    }, [])
+    }, [userId])
 
     async function createComment(data) {
         const comment = {
@@ -31,11 +31,8 @@ export const CommentsProvider = ({children}) => {
             created_at: Date.now()
         }
         try {
-            const {content} = await commentService.create(comment)
-            setComments(prevState => ({
-                ...prevState,
-                content
-            }))
+            const {content} = await commentService.createComment(comment)
+            setComments(prevState => [...prevState, content])
         } catch (error) {
             errorCatcher(error)
         }
@@ -44,12 +41,22 @@ export const CommentsProvider = ({children}) => {
     async function getComments() {
         try {
             const {content} = await commentService.getComments(userId)
-            console.log(content)
             setComments(content)
         } catch (error) {
             errorCatcher(error)
         } finally {
             setLoading(false)
+        }
+    }
+
+    async function removeComment(commentId) {
+        try {
+            const {content} = await commentService.removeComment(commentId)
+            if (content === null) {
+                setComments(prevState => prevState.filter(comment => comment._id !== commentId))
+            }
+        } catch (error) {
+            errorCatcher(error)
         }
     }
 
@@ -65,7 +72,7 @@ export const CommentsProvider = ({children}) => {
     }, [error])
 
     return (
-        <CommentsContext.Provider value={{comments, createComment, isLoading}}>
+        <CommentsContext.Provider value={{comments, createComment, isLoading, removeComment}}>
             {children}
         </CommentsContext.Provider>
     )

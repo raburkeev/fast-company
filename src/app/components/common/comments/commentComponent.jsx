@@ -2,10 +2,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {dateFunction} from '../../../utils/dateFunction'
 import {useUsers} from '../../../hooks/useUsers'
+import {useAuth} from '../../../hooks/useAuth'
 
-const CommentComponent = ({content, userId, onRemove, _id, created_at: created}) => {
+const CommentComponent = ({content, userId, onRemove, _id: id, created_at: created}) => {
     const {getUserById} = useUsers()
     const user = getUserById(userId)
+    const {currentUser} = useAuth()
+
     return (
         <div className="bg-light card-body mb-3">
             <div className="row">
@@ -25,10 +28,12 @@ const CommentComponent = ({content, userId, onRemove, _id, created_at: created})
                                         {user.name}
                                         <span className="small">{` ${dateFunction(created)}`}</span>
                                     </p>
-                                    <button className="btn btn-sm text-primary d-flex align-items-center" onClick={() => onRemove(_id)}
-                                    >
-                                        <i className="bi bi-x-lg"/>
-                                    </button>
+                                    {currentUser._id === userId && (
+                                        <button className="btn btn-sm text-primary d-flex align-items-center" onClick={() => onRemove(id)}
+                                        >
+                                            <i className="bi bi-x-lg"/>
+                                        </button>
+                                    )}
                                 </div>
                                 <p className="small mb-0">{content}</p>
                             </div>
