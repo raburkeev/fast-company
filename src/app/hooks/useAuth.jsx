@@ -90,11 +90,6 @@ const AuthProvider = ({children}) => {
         }
     }
 
-    function errorCatcher(error) {
-        const {message} = error.response.data
-        setError(message)
-    }
-
     async function getUserData() {
         try {
             const {content} = await userService.getCurrentUser()
@@ -105,6 +100,16 @@ const AuthProvider = ({children}) => {
             setLoading(false)
         }
     }
+
+    async function editUserData(data) {
+        try {
+            const {content} = await userService.update(data)
+            setCurrentUser(content)
+        } catch (error) {
+            errorCatcher(error)
+        }
+    }
+
     useEffect(() => {
         if (localStorageService.getAccessToken()) {
             getUserData()
@@ -112,6 +117,12 @@ const AuthProvider = ({children}) => {
             setLoading(false)
         }
     }, [])
+
+    function errorCatcher(error) {
+        const {message} = error.response.data
+        setError(message)
+    }
+
     useEffect(() => {
         if (error !== null) {
             toast.error(error)
@@ -119,7 +130,7 @@ const AuthProvider = ({children}) => {
         }
     }, [error])
     return (
-        <AuthContext.Provider value={{signUp, signIn, currentUser, logout}}>
+        <AuthContext.Provider value={{signUp, signIn, currentUser, logout, editUserData}}>
             {!isLoading ? children : <Loader />}
         </AuthContext.Provider>
     )

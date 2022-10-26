@@ -40,7 +40,7 @@ const UserInfoCardComponent = ({id, name, profession, rate, img}) => {
 UserInfoCardComponent.propTypes = {
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    profession: PropTypes.string.isRequired,
+    profession: PropTypes.object.isRequired,
     rate: PropTypes.number.isRequired,
     img: PropTypes.string.isRequired
 }
