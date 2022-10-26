@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {dateFunction} from '../../../utils/dateFunction'
+import {dateFunction} from '../../../utils/date/dateFunction'
 import {useUsers} from '../../../hooks/useUsers'
 import {useAuth} from '../../../hooks/useAuth'
 

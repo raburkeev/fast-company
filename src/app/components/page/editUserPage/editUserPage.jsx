@@ -11,7 +11,7 @@ import {useProfessions} from '../../../hooks/useProfession'
 import {useUsers} from '../../../hooks/useUsers'
 import {useAuth} from '../../../hooks/useAuth'
 import {transformQualitiesData} from '../../../utils/transformQualitiesData'
-import {getQualities, getQualitiesLoadingStatus} from '../../../store/qualities'
+import {getQualities, getQualitiesByIds, getQualitiesLoadingStatus} from '../../../store/qualities'
 import {useSelector} from 'react-redux'
 
 const EditUserPage = ({userId}) => {
@@ -26,6 +26,7 @@ const EditUserPage = ({userId}) => {
         value: prof._id
     }))
     const qualities = useSelector(getQualities())
+    const qualitiesUserList = useSelector(getQualitiesByIds(user.qualities))
     const isQualitiesLoading = useSelector(getQualitiesLoadingStatus())
     const qualitiesList = qualities.map(qual => ({
         label: qual.name,
@@ -42,7 +43,7 @@ const EditUserPage = ({userId}) => {
                 email: user.email,
                 profession: user.profession,
                 sex: user.sex,
-                qualities: transformQualitiesData(user.qualities.map(q => getQuality(q)))
+                qualities: transformQualitiesData(qualitiesUserList)
             })
         }
     }, [isProfessionsLoading, isQualitiesLoading])
