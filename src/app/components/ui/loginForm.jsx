@@ -1,9 +1,13 @@
 import React, {useEffect, useState} from 'react'
+import {useHistory} from 'react-router-dom'
 import {validator} from '../../utils/validator'
 import TextField from '../common/form/textField'
 import CheckBoxField from '../common/form/checkBoxField'
+import {useAuth} from '../../hooks/useAuth'
 
 const LoginForm = () => {
+    const history = useHistory()
+    const {signIn} = useAuth()
     const [data, setData] = useState({
         email: '',
         password: '',
@@ -13,14 +17,10 @@ const LoginForm = () => {
 
     const validatorConfig = {
         email: {
-            isRequired: {message: 'Электронная почта обязательна для заполнения'},
-            isEmail: {message: 'Email введен некорректно'}
+            isRequired: {message: 'Электронная почта обязательна для заполнения'}
         },
         password: {
-            isRequired: {message: 'Пароль обязателен для заполнения'},
-            isCapitalSymbol: {message: 'Пароль должен содержать хотя бы одну заглавную букву'},
-            isContainDigit: {message: 'Пароль должен содержать хотя бы одну цифру'},
-            minLength: {message: 'Пароль должен быть не менее 8 символов', value: 8}
+            isRequired: {message: 'Пароль обязателен для заполнения'}
         }
     }
 
@@ -43,13 +43,17 @@ const LoginForm = () => {
         }))
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault()
         const isValid = validate()
 
         if (!isValid) return
-
-        console.log(data)
+        try {
+            await signIn(data)
+            history.replace(history.location.state.from.pathname ? history.location.state.from.pathname : '/')
+        } catch (error) {
+            setErrors(error)
+        }
     }
 
     return (

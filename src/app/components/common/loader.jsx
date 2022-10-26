@@ -11,13 +11,14 @@ const Loader = ({loadingTarget, margin}) => {
     return (
         <div className={getMarginForLoader()}>
             <div className="spinner-border m-2" role="status" aria-hidden="true"/>
-            <strong>Loading {loadingTarget}...</strong>
+            <strong>{`Loading ${loadingTarget && loadingTarget}...`}</strong>
         </div>
     )
 }
 
 Loader.defaultProps = {
-    margin: null
+    margin: null,
+    loadingTarget: ''
 }
 
 Loader.propTypes = {

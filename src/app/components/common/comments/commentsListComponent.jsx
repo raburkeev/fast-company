@@ -1,14 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import api from '../../../api'
 import CommentComponent from './commentComponent'
 import _ from 'lodash'
 
-const CommentsListComponent = ({comments, setComments}) => {
+const CommentsListComponent = ({comments, onRemove}) => {
     const handleRemove = (commentId) => {
-        api.comments.remove(commentId).then(id => {
-            setComments(comments.filter(comment => comment._id !== id))
-        })
+        onRemove(commentId)
     }
     const sortedComments = _.orderBy(comments, 'created_at', 'desc')
 
@@ -29,7 +26,7 @@ const CommentsListComponent = ({comments, setComments}) => {
 
 CommentsListComponent.propTypes = {
     comments: PropTypes.array.isRequired,
-    setComments: PropTypes.func.isRequired
+    onRemove: PropTypes.func.isRequired
 }
 
 export default CommentsListComponent
