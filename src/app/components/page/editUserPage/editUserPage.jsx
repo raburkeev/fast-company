@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react'
-import {useParams, useHistory} from 'react-router-dom'
+import PropTypes from 'prop-types'
+import {useHistory} from 'react-router-dom'
 import * as yup from 'yup'
 import TextField from '../../common/form/textField'
 import SelectField from '../../common/form/selectField'
@@ -10,10 +11,10 @@ import {useProfessions} from '../../../hooks/useProfession'
 import {useQualities} from '../../../hooks/useQuality'
 import {useUsers} from '../../../hooks/useUsers'
 import {useAuth} from '../../../hooks/useAuth'
+import {transformQualitiesData} from '../../../utils/transformQualitiesData'
 
-const EditUserPage = () => {
+const EditUserPage = ({userId}) => {
     const history = useHistory()
-    const {userId} = useParams()
     const {editUserData} = useAuth()
     const {getUserById} = useUsers()
     const user = getUserById(userId)
@@ -34,20 +35,17 @@ const EditUserPage = () => {
     useEffect(() => {
         if (!isProfessionsLoading && !isQualitiesLoading) {
             setDataLoading(false)
+            setData({
+                name: user.name,
+                email: user.email,
+                profession: user.profession,
+                sex: user.sex,
+                qualities: transformQualitiesData(user.qualities.map(q => getQuality(q)))
+            })
         }
     }, [isProfessionsLoading, isQualitiesLoading])
 
-    const transformQualitiesData = (qualitiesData) => {
-        return qualitiesData.map(qual => ({label: qual.name, value: qual._id}))
-    }
-
-    const [data, setData] = useState({
-        name: user.name,
-        email: user.email,
-        profession: user.profession,
-        sex: user.sex,
-        qualities: transformQualitiesData(user.qualities.map(q => getQuality(q)))
-    })
+    const [data, setData] = useState({})
 
     const handleSubmit = async (event) => {
         event.preventDefault()
@@ -140,6 +138,10 @@ const EditUserPage = () => {
             </div>
         </div>
     )
+}
+
+EditUserPage.propTypes = {
+    userId: PropTypes.string.isRequired
 }
 
 export default EditUserPage
