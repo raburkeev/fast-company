@@ -18,7 +18,7 @@ const QualitiesCardComponent = ({user}) => {
                     <span>Qualities</span>
                 </h5>
                 <p>
-                    <Qualities user={user}/>
+                    <Qualities qualities={user.qualities}/>
                 </p>
             </div>
         </div>

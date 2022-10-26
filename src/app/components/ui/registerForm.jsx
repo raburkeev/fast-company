@@ -17,6 +17,7 @@ const RegisterForm = () => {
         password: '',
         profession: '',
         sex: 'male',
+        name: '',
         qualities: [],
         licence: false
     })
@@ -50,6 +51,10 @@ const RegisterForm = () => {
         },
         licence: {
             isRequired: {message: 'Вы не можете использовать наш сервис без подтвержения лицензионного соглашения'}
+        },
+        name: {
+            isRequired: {message: 'Имя обязательно для заполнения'},
+            minLength: {message: 'Имя должен быть не менее 3 символов', value: 3}
         }
     }
 
@@ -94,6 +99,13 @@ const RegisterForm = () => {
                 value={data.password}
                 onChange={handleChange}
                 error={errors.password}
+            />
+            <TextField
+                label="Имя"
+                name="name"
+                value={data.name}
+                onChange={handleChange}
+                error={errors.name}
             />
             <SelectField
                 label="Выберите вашу профессию:"

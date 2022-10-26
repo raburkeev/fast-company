@@ -1,20 +1,26 @@
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import AddCommentForm from '../common/comments/addCommentForm'
 import CommentsListComponent from '../common/comments/commentsListComponent'
 import PropTypes from 'prop-types'
-import api from '../../api'
 import Loader from '../common/loader'
+import {useComments} from '../../hooks/useComments'
 
 const Comments = ({userId}) => {
-    const [comments, setComments] = useState(null)
-    useEffect(() => {
-        api.comments.fetchCommentsForUser(userId).then(data => setComments(data))
-    }, [])
+    const {createComment, comments, removeComment} = useComments()
+
+    const handleSubmit = (data) => {
+        createComment(data)
+    }
+
+    const handleRemove = (commentId) => {
+        removeComment(commentId)
+    }
+
     return comments
         ? (
             <>
-                <AddCommentForm userId={userId} comments={comments} setComments={setComments}/>
-                <CommentsListComponent userId={userId} comments={comments} setComments={setComments}/>
+                <AddCommentForm onSubmit={handleSubmit}/>
+                <CommentsListComponent userId={userId} comments={comments} onRemove={handleRemove}/>
             </>
         )
         : <Loader loadingTarget="comments" />

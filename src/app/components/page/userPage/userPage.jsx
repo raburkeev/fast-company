@@ -1,45 +1,41 @@
-import React, {useEffect, useState} from 'react'
-import PropTypes from 'prop-types'
-import api from '../../../api'
+import React from 'react'
+import {useParams} from 'react-router-dom'
 import Loader from '../../common/loader'
 import UserInfoCardComponent from '../../ui/userInfoCardComponent'
 import QualitiesCardComponent from '../../ui/qualitiesCardComponent'
 import CompletedMeetingsCardComponent from '../../ui/completedMeetingsCardComponent'
 import Comments from '../../ui/comments'
+import {useUsers} from '../../../hooks/useUsers'
+import {CommentsProvider} from '../../../hooks/useComments'
+import {useProfessions} from '../../../hooks/useProfession'
 
-const UserPage = ({id}) => {
-    const [user, setUser] = useState(null)
+const UserPage = () => {
+    const {userId} = useParams()
+    const {getUserById} = useUsers()
+    const user = getUserById(userId)
+    const {getProfession} = useProfessions()
+    const profession = getProfession(user.profession)
 
-    useEffect(() => {
-        api.users.getById(id).then((data) => {
-            if (typeof data !== 'undefined') {
-                setUser(data)
-            }
-        })
-    }, [])
-
-    return user
+    return user && profession
         ? (
             <div className="container">
                 <div className="row gutters-sm">
                     <div className="col-md-4 mb-3">
-                        <UserInfoCardComponent id={id} name={user.name} profession={user.profession}
-                            rate={user.rate}/>
+                        <UserInfoCardComponent id={userId} name={user.name} profession={profession}
+                            rate={user.rate} img={user.img}/>
                         <QualitiesCardComponent user={user}/>
                         <CompletedMeetingsCardComponent completedMeetings={user.completedMeetings}/>
                     </div>
 
                     <div className="col-md-8">
-                        <Comments userId={id} />
+                        <CommentsProvider>
+                            <Comments userId={userId} />
+                        </CommentsProvider>
                     </div>
                 </div>
             </div>
         )
         : <Loader loadingTarget={'user'} margin={5}/>
-}
-
-UserPage.propTypes = {
-    id: PropTypes.string.isRequired
 }
 
 export default UserPage
