@@ -8,10 +8,11 @@ import RadioField from '../../common/form/radioField'
 import MultiSelectField from '../../common/form/multiSelectField'
 import BackHistoryButton from '../../common/backHistoryButton'
 import {useProfessions} from '../../../hooks/useProfession'
-import {useQualities} from '../../../hooks/useQuality'
 import {useUsers} from '../../../hooks/useUsers'
 import {useAuth} from '../../../hooks/useAuth'
 import {transformQualitiesData} from '../../../utils/transformQualitiesData'
+import {getQualities, getQualitiesLoadingStatus} from '../../../store/qualities'
+import {useSelector} from 'react-redux'
 
 const EditUserPage = ({userId}) => {
     const history = useHistory()
@@ -24,7 +25,8 @@ const EditUserPage = ({userId}) => {
         label: prof.name,
         value: prof._id
     }))
-    const {qualities, isLoading: isQualitiesLoading, getQuality} = useQualities()
+    const qualities = useSelector(getQualities())
+    const isQualitiesLoading = useSelector(getQualitiesLoadingStatus())
     const qualitiesList = qualities.map(qual => ({
         label: qual.name,
         value: qual._id
