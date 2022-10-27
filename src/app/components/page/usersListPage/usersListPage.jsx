@@ -7,13 +7,15 @@ import SearchStatus from '../../ui/searchStatus'
 import UsersTable from '../../ui/usersTable'
 import Pagination from '../../common/pagination'
 import {useUsers} from '../../../hooks/useUsers'
-import {useProfessions} from '../../../hooks/useProfession'
 import {useAuth} from '../../../hooks/useAuth'
+import {useSelector} from 'react-redux'
+import {getProfessionsList, getProfessionsLoadingStatus} from '../../../store/professions'
 
 const UsersListPage = () => {
     const {currentUser} = useAuth()
     const {users} = useUsers()
-    const {professions, isLoading: professionsLoading} = useProfessions()
+    const professions = useSelector(getProfessionsList())
+    const professionsLoading = useSelector(getProfessionsLoadingStatus())
     const [currentPage, setCurrentPage] = useState(1)
     const [selectedProf, setSelectedProf] = useState(null)
     const [sortBy, setSortBy] = useState({iter: 'name', order: 'asc'})
@@ -74,14 +76,6 @@ const UsersListPage = () => {
             setCurrentPage(1)
         }
 
-        if (usersCount === 0) {
-            return (
-                <span className="badge bg-danger p-2 m-2 fs-5">
-                Никто с тобой не тусанет :(
-                </span>
-            )
-        }
-
         return (
             <div className="d-flex">
                 {professions && !professionsLoading
@@ -102,24 +96,32 @@ const UsersListPage = () => {
                     )
                     : <Loader loadingTarget={'filter'} margin={1}/>}
                 <div className="d-flex flex-column">
-                    <SearchStatus length={usersCount}/>
-                    <input type="text" placeholder="search..." name="search" onChange={handleSearchChange}
-                        value={search}/>
-                    <UsersTable
-                        users={usersCrop}
-                        onDelete={handleDelete}
-                        onToggleBookMark={handleToggleBookMark}
-                        onSort={handleSort}
-                        selectedSort={sortBy}
-                    />
-                    <div className="d-flex justify-content-center">
-                        <Pagination
-                            itemsCount={usersCount}
-                            pageSize={pageSize}
-                            currentPage={currentPage}
-                            onPageChange={handlePageChange}
-                        />
-                    </div>
+                    {usersCount === 0
+                        ? <span className="badge bg-danger p-2 m-2 fs-5">Никто с тобой не тусанет</span>
+                        : (
+                            <>
+                                <SearchStatus length={usersCount}/>
+                                <input type="text" placeholder="search..." name="search" onChange={handleSearchChange}
+                                    value={search}/>
+                                <UsersTable
+                                    users={usersCrop}
+                                    onDelete={handleDelete}
+                                    onToggleBookMark={handleToggleBookMark}
+                                    onSort={handleSort}
+                                    selectedSort={sortBy}
+                                />
+                                <div className="d-flex justify-content-center">
+                                    <Pagination
+                                        itemsCount={usersCount}
+                                        pageSize={pageSize}
+                                        currentPage={currentPage}
+                                        onPageChange={handlePageChange}
+                                    />
+                                </div>
+                            </>
+                        )
+                    }
+
                 </div>
             </div>
         )
