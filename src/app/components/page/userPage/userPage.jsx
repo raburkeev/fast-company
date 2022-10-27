@@ -5,15 +5,14 @@ import UserInfoCardComponent from '../../ui/userInfoCardComponent'
 import QualitiesCardComponent from '../../ui/qualitiesCardComponent'
 import CompletedMeetingsCardComponent from '../../ui/completedMeetingsCardComponent'
 import Comments from '../../ui/comments'
-import {useUsers} from '../../../hooks/useUsers'
 import {CommentsProvider} from '../../../hooks/useComments'
 import {useSelector} from 'react-redux'
 import {getProfessionById} from '../../../store/professions'
+import {getUserById} from '../../../store/users'
 
 const UserPage = () => {
     const {userId} = useParams()
-    const {getUserById} = useUsers()
-    const user = getUserById(userId)
+    const user = useSelector(getUserById(userId))
     const profession = useSelector(getProfessionById(user.profession))
 
     return user && profession

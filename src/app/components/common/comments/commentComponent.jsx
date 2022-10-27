@@ -1,12 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {dateFunction} from '../../../utils/date/dateFunction'
-import {useUsers} from '../../../hooks/useUsers'
 import {useAuth} from '../../../hooks/useAuth'
+import {useSelector} from 'react-redux'
+import {getUserById} from '../../../store/users'
 
 const CommentComponent = ({content, userId, onRemove, _id: id, created_at: created}) => {
-    const {getUserById} = useUsers()
-    const user = getUserById(userId)
+    const user = useSelector(getUserById(userId))
     const {currentUser} = useAuth()
 
     return (
