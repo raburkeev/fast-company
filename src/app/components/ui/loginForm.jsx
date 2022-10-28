@@ -3,12 +3,13 @@ import {useHistory} from 'react-router-dom'
 import {validator} from '../../utils/validator'
 import TextField from '../common/form/textField'
 import CheckBoxField from '../common/form/checkBoxField'
-import {useDispatch} from 'react-redux'
-import {signIn} from '../../store/users'
+import {useDispatch, useSelector} from 'react-redux'
+import {getAuthError, signIn} from '../../store/users'
 
 const LoginForm = () => {
     const history = useHistory()
     const dispatch = useDispatch()
+    const loginError = useSelector(getAuthError())
     const [data, setData] = useState({
         email: '',
         password: '',
@@ -79,6 +80,7 @@ const LoginForm = () => {
             >
                 Оставаться в системе
             </CheckBoxField>
+            {loginError && <p className="text-danger">{loginError}</p>}
             <button className="btn btn-primary w-100 mx-auto" type="submit" disabled={!isValid}>Submit</button>
         </form>
 

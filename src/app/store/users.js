@@ -4,6 +4,7 @@ import authService from '../services/auth.service'
 import localStorageService from '../services/localStorage.service'
 import {randomInt} from '../utils/randomInt'
 import history from '../utils/history'
+import {generateAuthError} from '../utils/generateAuthError'
 
 const initialState = localStorageService.getAccessToken()
     ? {
@@ -61,6 +62,9 @@ const usersSlice = createSlice({
         userUpdated: (state, action) => {
             const userIndex = state.entities.findIndex(user => user._id === action.payload._id)
             state.entities[userIndex] = action.payload
+        },
+        authRequested: (state) => {
+            state.error = null
         }
     }
 })
@@ -91,7 +95,13 @@ export const signIn = ({payload, redirect}) => async (dispatch) => {
         localStorageService.setTokens(data)
         history.push(redirect)
     } catch (error) {
-        dispatch(authRequestFailed(error.message))
+        const {code, message} = error.response.data.error
+        if (code === 400) {
+            const errorMessage = generateAuthError(message)
+            dispatch(authRequestFailed(errorMessage))
+        } else {
+            dispatch(authRequestFailed(error.message))
+        }
     }
 }
 
@@ -162,5 +172,7 @@ export const getCurrentUserId = () => (state) => state.users.auth.userId
 export const getIsLoggedIn = () => (state) => {
     return state.users.isLoggedIn
 }
+
+export const getAuthError = () => (state) => state.users.error
 
 export default usersReducer
