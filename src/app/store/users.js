@@ -5,16 +5,27 @@ import localStorageService from '../services/localStorage.service'
 import {randomInt} from '../utils/randomInt'
 import history from '../utils/history'
 
-const usersSlice = createSlice({
-    name: 'users',
-    initialState: {
+const initialState = localStorageService.getAccessToken()
+    ? {
         entities: null,
         isLoading: true,
+        error: null,
+        auth: {userId: localStorageService.getUserId()},
+        isLoggedIn: true,
+        dataLoaded: false
+    }
+    : {
+        entities: null,
+        isLoading: false,
         error: null,
         auth: null,
         isLoggedIn: false,
         dataLoaded: false
-    },
+    }
+
+const usersSlice = createSlice({
+    name: 'users',
+    initialState,
     reducers: {
         usersRequested: (state) => {
             state.isLoading = true
@@ -40,12 +51,18 @@ const usersSlice = createSlice({
                 state.entities = []
             }
             state.entities.push(action.payload)
+        },
+        userLoggedOut: (state, action) => {
+            state.entities = null
+            state.auth = null
+            state.isLoggedIn = false
+            state.dataLoaded = false
         }
     }
 })
 
 const {reducer: usersReducer, actions} = usersSlice
-const {usersRequested, usersReceived, usersRequestFailed, authRequestSuccess, authRequestFailed, userCreated} = actions
+const {usersRequested, usersReceived, usersRequestFailed, authRequestSuccess, authRequestFailed, userCreated, userLoggedOut} = actions
 
 export const loadUsersList = () => async (dispatch) => {
     dispatch(usersRequested())
@@ -106,7 +123,15 @@ function createUser(payload) {
     }
 }
 
+export const logout = () => (dispatch) => {
+    localStorageService.removeAuthData()
+    dispatch(userLoggedOut())
+    history.push('/')
+}
+
 export const getUsersList = () => (state) => state.users.entities
+
+export const getUsersLoadingStatus = () => (state) => state.users.isLoading
 
 export const getDataStatus = () => (state) => state.users.dataLoaded
 
@@ -114,10 +139,13 @@ export const getUserById = (userId) => (state) => {
     return state.users.entities ? state.users.entities.find(user => user._id === userId) : {}
 }
 
+export const getCurrentUserData = () => (state) => {
+    return state.users.entities ? state.users.entities.find(user => user._id === state.users.auth.userId) : null
+}
+
 export const getCurrentUserId = () => (state) => state.users.auth.userId
 
 export const getIsLoggedIn = () => (state) => {
-    console.log(state)
     return state.users.isLoggedIn
 }
 

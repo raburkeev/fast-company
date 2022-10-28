@@ -8,7 +8,6 @@ const ProtectedRoute = ({component: Component, children, ...rest}) => {
     const isLoggedIn = useSelector(getIsLoggedIn())
     return (
         <Route {...rest} render={(props) => {
-            console.log(isLoggedIn)
             if (!isLoggedIn) {
                 return <Redirect to={
                     {
