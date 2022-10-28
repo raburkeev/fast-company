@@ -57,12 +57,16 @@ const usersSlice = createSlice({
             state.auth = null
             state.isLoggedIn = false
             state.dataLoaded = false
+        },
+        userUpdated: (state, action) => {
+            const userIndex = state.entities.findIndex(user => user._id === action.payload._id)
+            state.entities[userIndex] = action.payload
         }
     }
 })
 
 const {reducer: usersReducer, actions} = usersSlice
-const {usersRequested, usersReceived, usersRequestFailed, authRequestSuccess, authRequestFailed, userCreated, userLoggedOut} = actions
+const {usersRequested, usersReceived, usersRequestFailed, authRequestSuccess, authRequestFailed, userCreated, userLoggedOut, userUpdated} = actions
 
 export const loadUsersList = () => async (dispatch) => {
     dispatch(usersRequested())
@@ -105,6 +109,16 @@ export const signUp = ({email, password, ...rest}) => async (dispatch) => {
             img: `https://avatars.dicebear.com/api/avataaars/${(Math.random() + 1).toString(36).substring(7)}.svg`,
             ...rest
         }))
+    } catch (error) {
+        dispatch(authRequestFailed(error.message))
+    }
+}
+
+export const updateUser = (data) => async (dispatch) => {
+    dispatch(authRequested())
+    try {
+        const {content} = await userService.update(data)
+        dispatch(userUpdated(content))
     } catch (error) {
         dispatch(authRequestFailed(error.message))
     }

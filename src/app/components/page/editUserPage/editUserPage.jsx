@@ -7,18 +7,16 @@ import SelectField from '../../common/form/selectField'
 import RadioField from '../../common/form/radioField'
 import MultiSelectField from '../../common/form/multiSelectField'
 import BackHistoryButton from '../../common/backHistoryButton'
-import {useAuth} from '../../../hooks/useAuth'
 import {transformQualitiesData} from '../../../utils/transformQualitiesData'
 import {getQualities, getQualitiesByIds, getQualitiesLoadingStatus} from '../../../store/qualities'
-import {useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {getProfessionsList, getProfessionsLoadingStatus} from '../../../store/professions'
-import {getUserById} from '../../../store/users'
+import {getUserById, updateUser} from '../../../store/users'
 
 const EditUserPage = ({userId}) => {
+    const dispatch = useDispatch()
     const history = useHistory()
-    const {editUserData} = useAuth()
     const user = useSelector(getUserById(userId))
-
     const professions = useSelector(getProfessionsList())
     const isProfessionsLoading = useSelector(getProfessionsLoadingStatus())
     const professionsList = professions.map(prof => ({
@@ -55,11 +53,11 @@ const EditUserPage = ({userId}) => {
         const isValid = validate()
         if (!isValid) return
 
-        await editUserData({
+        dispatch(updateUser({
             ...user,
             ...data,
             qualities: data.qualities.map(q => q.value)
-        })
+        }))
         history.replace(`/users/${userId}`)
     }
 
