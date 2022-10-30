@@ -3,7 +3,6 @@ import AddCommentForm from '../common/comments/addCommentForm'
 import CommentsListComponent from '../common/comments/commentsListComponent'
 import PropTypes from 'prop-types'
 import Loader from '../common/loader'
-import {useComments} from '../../hooks/useComments'
 import {useDispatch, useSelector} from 'react-redux'
 import {getComments, getCommentsLoadingStatus, loadCommentsList} from '../../store/comments'
 
@@ -14,21 +13,12 @@ const Comments = ({userId}) => {
     useEffect(() => {
         dispatch(loadCommentsList(userId))
     }, [userId])
-    const {createComment, removeComment} = useComments()
-
-    const handleSubmit = (data) => {
-        createComment(data)
-    }
-
-    const handleRemove = (commentId) => {
-        removeComment(commentId)
-    }
 
     return (
         <>
-            <AddCommentForm onSubmit={handleSubmit}/>
+            <AddCommentForm />
             {!isLoading
-                ? <CommentsListComponent userId={userId} comments={comments} onRemove={handleRemove}/>
+                ? <CommentsListComponent userId={userId} comments={comments}/>
                 : <Loader loadingTarget={'comments'}/>
             }
         </>

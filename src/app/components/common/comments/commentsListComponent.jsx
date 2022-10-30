@@ -3,10 +3,7 @@ import PropTypes from 'prop-types'
 import CommentComponent from './commentComponent'
 import _ from 'lodash'
 
-const CommentsListComponent = ({comments, onRemove}) => {
-    const handleRemove = (commentId) => {
-        onRemove(commentId)
-    }
+const CommentsListComponent = ({comments}) => {
     const sortedComments = _.orderBy(comments, 'created_at', 'desc')
 
     return JSON.stringify(sortedComments) !== '[]'
@@ -16,7 +13,7 @@ const CommentsListComponent = ({comments, onRemove}) => {
                     <h2>Comments</h2>
                     <hr/>
                     {sortedComments.map(comment => (
-                        <CommentComponent key={comment._id} {...comment} onRemove={handleRemove}/>
+                        <CommentComponent key={comment._id} {...comment} />
                     ))}
                 </div>
             </div>
@@ -25,8 +22,7 @@ const CommentsListComponent = ({comments, onRemove}) => {
 }
 
 CommentsListComponent.propTypes = {
-    comments: PropTypes.array.isRequired,
-    onRemove: PropTypes.func.isRequired
+    comments: PropTypes.array.isRequired
 }
 
 export default CommentsListComponent
