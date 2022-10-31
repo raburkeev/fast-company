@@ -23,14 +23,15 @@ export const CommentsProvider = ({children}) => {
         getComments()
     }, [userId])
 
-    async function createComment(data) {
+    async function createComment({data, pageId}) {
         const comment = {
             ...data,
             _id: nanoid(),
-            pageId: userId,
+            pageId,
             userId: currentUserId,
             created_at: Date.now()
         }
+        console.log(comment)
         try {
             const {content} = await commentService.createComment(comment)
             setComments(prevState => [...prevState, content])
