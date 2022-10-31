@@ -1,4 +1,4 @@
-import {createSlice} from '@reduxjs/toolkit'
+import {createAction, createSlice} from '@reduxjs/toolkit'
 import commentService from '../services/comment.service'
 import {nanoid} from 'nanoid'
 import localStorageService from '../services/localStorage.service'
@@ -43,6 +43,9 @@ const commentsSlice = createSlice({
 const {reducer: commentsReducer, actions} = commentsSlice
 const {commentsRequested, commentsReceived, commentsRequestFailed, commentCreated, commentCreateFailed, commentRemoved, commentRemoveFailed} = actions
 
+const createCommentRequested = createAction('comments/createCommentRequested')
+const removeCommentRequested = createAction('comments/removeCommentRequested')
+
 export const loadCommentsList = (userId) => async (dispatch) => {
     dispatch(commentsRequested())
     try {
@@ -61,6 +64,7 @@ export const createComment = ({data, pageId}) => async (dispatch) => {
         pageId,
         created_at: Date.now()
     }
+    dispatch(createCommentRequested())
     try {
         const {content} = await commentService.createComment(comment)
         dispatch(commentCreated(content))
@@ -70,9 +74,12 @@ export const createComment = ({data, pageId}) => async (dispatch) => {
 }
 
 export const removeComment = (commentId) => async (dispatch) => {
+    dispatch(removeCommentRequested())
     try {
-        await commentService.removeComment(commentId)
-        dispatch(commentRemoved(commentId))
+        const {content} = await commentService.removeComment(commentId)
+        if (content === null) {
+            dispatch(commentRemoved(commentId))
+        }
     } catch (error) {
         dispatch(commentRemoveFailed(error.message))
     }

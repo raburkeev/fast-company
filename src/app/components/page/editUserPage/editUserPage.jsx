@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
-import {useHistory} from 'react-router-dom'
 import * as yup from 'yup'
 import TextField from '../../common/form/textField'
 import SelectField from '../../common/form/selectField'
@@ -15,7 +14,6 @@ import {getUserById, updateUser} from '../../../store/users'
 
 const EditUserPage = ({userId}) => {
     const dispatch = useDispatch()
-    const history = useHistory()
     const user = useSelector(getUserById(userId))
     const professions = useSelector(getProfessionsList())
     const isProfessionsLoading = useSelector(getProfessionsLoadingStatus())
@@ -58,7 +56,6 @@ const EditUserPage = ({userId}) => {
             ...data,
             qualities: data.qualities.map(q => q.value)
         }))
-        history.replace(`/users/${userId}`)
     }
 
     const validateSchema = yup.object().shape({

@@ -85,6 +85,8 @@ export const loadUsersList = () => async (dispatch) => {
 const authRequested = createAction('users/authRequested')
 const userCreateRequested = createAction('users/userCreateRequested')
 const createUserFailed = createAction('users/createUserFailed')
+const userUpdateRequested = createAction('users/userUpdateRequested')
+const userUpdateFailed = createAction('users/userUpdateFailed')
 
 export const signIn = ({payload, redirect}) => async (dispatch) => {
     const {email, password} = payload
@@ -125,12 +127,13 @@ export const signUp = ({email, password, ...rest}) => async (dispatch) => {
 }
 
 export const updateUser = (data) => async (dispatch) => {
-    dispatch(authRequested())
+    dispatch(userUpdateRequested())
     try {
         const {content} = await userService.update(data)
         dispatch(userUpdated(content))
+        history.replace(`/users/${content._id}`)
     } catch (error) {
-        dispatch(authRequestFailed(error.message))
+        dispatch(userUpdateFailed(error.message))
     }
 }
 
