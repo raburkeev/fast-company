@@ -1,12 +1,18 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {dateFunction} from '../../../utils/date/dateFunction'
-import {useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {getCurrentUserId, getUserById} from '../../../store/users'
+import {removeComment} from '../../../store/comments'
 
-const CommentComponent = ({content, userId, onRemove, _id: id, created_at: created}) => {
+const CommentComponent = ({content, userId, _id: id, created_at: created}) => {
+    const dispatch = useDispatch()
     const user = useSelector(getUserById(userId))
     const currentUserId = useSelector(getCurrentUserId())
+
+    const onRemove = () => {
+        dispatch(removeComment(id))
+    }
 
     return (
         <div className="bg-light card-body mb-3">
@@ -28,7 +34,7 @@ const CommentComponent = ({content, userId, onRemove, _id: id, created_at: creat
                                         <span className="small">{` ${dateFunction(created)}`}</span>
                                     </p>
                                     {currentUserId === userId && (
-                                        <button className="btn btn-sm text-primary d-flex align-items-center" onClick={() => onRemove(id)}
+                                        <button className="btn btn-sm text-primary d-flex align-items-center" onClick={onRemove}
                                         >
                                             <i className="bi bi-x-lg"/>
                                         </button>
@@ -48,7 +54,6 @@ CommentComponent.propTypes = {
     userId: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,
     userName: PropTypes.string,
-    onRemove: PropTypes.func.isRequired,
     created_at: PropTypes.number.isRequired,
     _id: PropTypes.string.isRequired
 }
