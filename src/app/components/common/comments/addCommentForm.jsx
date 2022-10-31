@@ -1,9 +1,13 @@
 import React, {useEffect, useState} from 'react'
-import PropTypes from 'prop-types'
+import {useParams} from 'react-router-dom'
 import * as yup from 'yup'
 import TextAreaField from '../form/textAreaField'
+import {useDispatch} from 'react-redux'
+import {createComment} from '../../../store/comments'
 
-const AddCommentForm = ({onSubmit}) => {
+const AddCommentForm = () => {
+    const dispatch = useDispatch()
+    const {userId: pageId} = useParams()
     const [data, setData] = useState({})
     const [errors, setErrors] = useState({})
 
@@ -17,7 +21,7 @@ const AddCommentForm = ({onSubmit}) => {
         event.preventDefault()
         const isValid = validate()
         if (!isValid) return
-        onSubmit(data)
+        dispatch(createComment({data, pageId}))
         setData({})
     }
     const validateSchema = yup.object().shape({
@@ -58,10 +62,6 @@ const AddCommentForm = ({onSubmit}) => {
             </div>
         </div>
     )
-}
-
-AddCommentForm.propTypes = {
-    onSubmit: PropTypes.func.isRequired
 }
 
 export default AddCommentForm

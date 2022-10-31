@@ -1,14 +1,18 @@
 import React, {useState} from 'react'
-import {useAuth} from '../../hooks/useAuth'
 import {Link} from 'react-router-dom'
+import {useSelector} from 'react-redux'
+import {getCurrentUserData} from '../../store/users'
+import Loader from '../common/loader'
 
 const NavProfile = () => {
-    const {currentUser} = useAuth()
+    const currentUser = useSelector(getCurrentUserData())
     const [isOpen, setOpen] = useState(false)
 
     const toggleMenu = () => {
         setOpen(prevState => !prevState)
     }
+
+    if (!currentUser) return <Loader loadingTarget={'current user'}/>
 
     return (
         <div className="dropdown" onClick={toggleMenu}>

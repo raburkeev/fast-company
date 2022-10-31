@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import {Redirect, Route, Switch} from 'react-router-dom'
 import {ToastContainer} from 'react-toastify'
 import Users from './layouts/users'
@@ -8,29 +8,23 @@ import Login from './layouts/login'
 import AuthProvider from './hooks/useAuth'
 import ProtectedRoute from './components/common/protectedRoute'
 import Logout from './layouts/logout'
-import {useDispatch} from 'react-redux'
-import {loadQualitiesList} from './store/qualities'
-import {loadProfessionsList} from './store/professions'
+import AppLoader from './components/ui/hoc/appLoader'
 
 const App = () => {
-    const dispatch = useDispatch()
-    useEffect(() => {
-        dispatch(loadQualitiesList())
-        dispatch(loadProfessionsList())
-    }, [])
-
     return (
         <div>
-            <AuthProvider>
-                <NavBar/>
-                <Switch>
-                    <Route path="/" exact component={Main}/>
-                    <Route path="/login/:type?" component={Login}/>
-                    <Route path="/logout" component={Logout}/>
-                    <ProtectedRoute path="/users/:userId?/:edit?" component={Users}/>
-                    <Redirect to="/"/>
-                </Switch>
-            </AuthProvider>
+            <AppLoader>
+                <AuthProvider>
+                    <NavBar/>
+                    <Switch>
+                        <Route path="/" exact component={Main}/>
+                        <Route path="/login/:type?" component={Login}/>
+                        <Route path="/logout" component={Logout}/>
+                        <ProtectedRoute path="/users/:userId?/:edit?" component={Users}/>
+                        <Redirect to="/"/>
+                    </Switch>
+                </AuthProvider>
+            </AppLoader>
             <ToastContainer/>
         </div>
     )

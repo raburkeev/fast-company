@@ -6,14 +6,14 @@ import GroupList from '../../common/groupList'
 import SearchStatus from '../../ui/searchStatus'
 import UsersTable from '../../ui/usersTable'
 import Pagination from '../../common/pagination'
-import {useUsers} from '../../../hooks/useUsers'
-import {useAuth} from '../../../hooks/useAuth'
 import {useSelector} from 'react-redux'
 import {getProfessionsList, getProfessionsLoadingStatus} from '../../../store/professions'
+import {getUsersList, getDataStatus, getCurrentUserId} from '../../../store/users'
 
 const UsersListPage = () => {
-    const {currentUser} = useAuth()
-    const {users} = useUsers()
+    const currentUserId = useSelector(getCurrentUserId())
+    const users = useSelector(getUsersList())
+    const usersLoading = useSelector(getDataStatus())
     const professions = useSelector(getProfessionsList())
     const professionsLoading = useSelector(getProfessionsLoadingStatus())
     const [currentPage, setCurrentPage] = useState(1)
@@ -49,7 +49,7 @@ const UsersListPage = () => {
         setSortBy(item)
     }
 
-    if (JSON.stringify(users) !== '[]') {
+    if (usersLoading) {
         function filterUsers(data) {
             const filteredUsers = search
                 ? data.filter(user => user.name.toLowerCase().includes(search.toLowerCase()))
@@ -58,7 +58,7 @@ const UsersListPage = () => {
                         return user.profession === selectedProf._id
                     })
                     : data
-            return filteredUsers.filter(user => user._id !== currentUser._id)
+            return filteredUsers.filter(user => user._id !== currentUserId)
         }
         const filteredUsers = filterUsers(users)
         const usersCount = filteredUsers.length
