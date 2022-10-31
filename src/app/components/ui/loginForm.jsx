@@ -3,11 +3,13 @@ import {useHistory} from 'react-router-dom'
 import {validator} from '../../utils/validator'
 import TextField from '../common/form/textField'
 import CheckBoxField from '../common/form/checkBoxField'
-import {useAuth} from '../../hooks/useAuth'
+import {useDispatch, useSelector} from 'react-redux'
+import {getAuthError, signIn} from '../../store/users'
 
 const LoginForm = () => {
     const history = useHistory()
-    const {signIn} = useAuth()
+    const dispatch = useDispatch()
+    const loginError = useSelector(getAuthError())
     const [data, setData] = useState({
         email: '',
         password: '',
@@ -43,17 +45,15 @@ const LoginForm = () => {
         }))
     }
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = (event) => {
         event.preventDefault()
         const isValid = validate()
 
         if (!isValid) return
-        try {
-            await signIn(data)
-            history.replace(history.location.state.from.pathname ? history.location.state.from.pathname : '/')
-        } catch (error) {
-            setErrors(error)
-        }
+
+        const redirect = history.location.state ? history.location.state.from.pathname : '/'
+
+        dispatch(signIn({payload: data, redirect}))
     }
 
     return (
@@ -80,6 +80,7 @@ const LoginForm = () => {
             >
                 Оставаться в системе
             </CheckBoxField>
+            {loginError && <p className="text-danger">{loginError}</p>}
             <button className="btn btn-primary w-100 mx-auto" type="submit" disabled={!isValid}>Submit</button>
         </form>
 
