@@ -1,30 +1,29 @@
 import React, {useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
-import {useHistory} from 'react-router-dom'
 import * as yup from 'yup'
 import TextField from '../../common/form/textField'
 import SelectField from '../../common/form/selectField'
 import RadioField from '../../common/form/radioField'
 import MultiSelectField from '../../common/form/multiSelectField'
 import BackHistoryButton from '../../common/backHistoryButton'
-import {useProfessions} from '../../../hooks/useProfession'
-import {useQualities} from '../../../hooks/useQuality'
-import {useUsers} from '../../../hooks/useUsers'
-import {useAuth} from '../../../hooks/useAuth'
 import {transformQualitiesData} from '../../../utils/transformQualitiesData'
+import {getQualities, getQualitiesByIds, getQualitiesLoadingStatus} from '../../../store/qualities'
+import {useDispatch, useSelector} from 'react-redux'
+import {getProfessionsList, getProfessionsLoadingStatus} from '../../../store/professions'
+import {getUserById, updateUser} from '../../../store/users'
 
 const EditUserPage = ({userId}) => {
-    const history = useHistory()
-    const {editUserData} = useAuth()
-    const {getUserById} = useUsers()
-    const user = getUserById(userId)
-
-    const {professions, isLoading: isProfessionsLoading} = useProfessions()
+    const dispatch = useDispatch()
+    const user = useSelector(getUserById(userId))
+    const professions = useSelector(getProfessionsList())
+    const isProfessionsLoading = useSelector(getProfessionsLoadingStatus())
     const professionsList = professions.map(prof => ({
         label: prof.name,
         value: prof._id
     }))
-    const {qualities, isLoading: isQualitiesLoading, getQuality} = useQualities()
+    const qualities = useSelector(getQualities())
+    const qualitiesUserList = useSelector(getQualitiesByIds(user.qualities))
+    const isQualitiesLoading = useSelector(getQualitiesLoadingStatus())
     const qualitiesList = qualities.map(qual => ({
         label: qual.name,
         value: qual._id
@@ -40,24 +39,23 @@ const EditUserPage = ({userId}) => {
                 email: user.email,
                 profession: user.profession,
                 sex: user.sex,
-                qualities: transformQualitiesData(user.qualities.map(q => getQuality(q)))
+                qualities: transformQualitiesData(qualitiesUserList)
             })
         }
     }, [isProfessionsLoading, isQualitiesLoading])
 
     const [data, setData] = useState({})
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = (event) => {
         event.preventDefault()
         const isValid = validate()
         if (!isValid) return
 
-        await editUserData({
+        dispatch(updateUser({
             ...user,
             ...data,
             qualities: data.qualities.map(q => q.value)
-        })
-        history.replace(`/users/${userId}`)
+        }))
     }
 
     const validateSchema = yup.object().shape({

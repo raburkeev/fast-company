@@ -1,17 +1,17 @@
 import React, {useEffect, useState} from 'react'
-import {useHistory} from 'react-router-dom'
 import {validator} from '../../utils/validator'
 import TextField from '../common/form/textField'
 import SelectField from '../common/form/selectField'
 import RadioField from '../common/form/radioField'
 import MultiSelectField from '../common/form/multiSelectField'
 import CheckBoxField from '../common/form/checkBoxField'
-import {useQualities} from '../../hooks/useQuality'
-import {useProfessions} from '../../hooks/useProfession'
-import {useAuth} from '../../hooks/useAuth'
+import {useDispatch, useSelector} from 'react-redux'
+import {getQualities} from '../../store/qualities'
+import {getProfessionsList} from '../../store/professions'
+import {signUp} from '../../store/users'
 
 const RegisterForm = () => {
-    const history = useHistory()
+    const dispatch = useDispatch()
     const [data, setData] = useState({
         email: '',
         password: '',
@@ -21,10 +21,9 @@ const RegisterForm = () => {
         qualities: [],
         licence: false
     })
-    const {signUp} = useAuth()
-    const {qualities} = useQualities()
+    const qualities = useSelector(getQualities())
     const qualitiesList = qualities.map(q => ({label: q.name, value: q._id}))
-    const {professions} = useProfessions()
+    const professions = useSelector(getProfessionsList())
     const professionsList = professions.map(prof => ({label: prof.name, value: prof._id}))
     const [errors, setErrors] = useState({})
 
@@ -70,17 +69,12 @@ const RegisterForm = () => {
 
     const isValid = Object.keys(errors).length === 0
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = (event) => {
         event.preventDefault()
         const isValid = validate()
         if (!isValid) return
         const newData = {...data, qualities: data.qualities.map(q => q.value)}
-        try {
-            await signUp(newData)
-            history.push('/')
-        } catch (error) {
-            setErrors(error)
-        }
+        dispatch(signUp(newData))
     }
 
     return (
