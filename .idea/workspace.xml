@@ -19,11 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="72569fbb-ae13-4774-a3f9-9c5ab7ed4069" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/config/default.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/config/default.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/routes/auth.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/routes/auth.routes.js" afterDir="false" />
-    </list>
+    <list default="true" id="72569fbb-ae13-4774-a3f9-9c5ab7ed4069" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -131,7 +127,7 @@
       <workItem from="1669046423294" duration="923000" />
       <workItem from="1669647782309" duration="799000" />
       <workItem from="1669648652812" duration="8915000" />
-      <workItem from="1669755673877" duration="7727000" />
+      <workItem from="1669755673877" duration="8055000" />
     </task>
     <servers />
   </component>
