@@ -20,7 +20,7 @@ const UserPage = () => {
                 <div className="row gutters-sm">
                     <div className="col-md-4 mb-3">
                         <UserInfoCardComponent id={user._id} name={user.name} profession={profession}
-                            rate={user.rate} img={user.img}/>
+                            rate={user.rate} img={user.image}/>
                         <QualitiesCardComponent user={user}/>
                         <CompletedMeetingsCardComponent completedMeetings={user.completedMeetings}/>
                     </div>

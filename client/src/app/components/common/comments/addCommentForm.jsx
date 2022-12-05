@@ -21,7 +21,7 @@ const AddCommentForm = () => {
         event.preventDefault()
         const isValid = validate()
         if (!isValid) return
-        dispatch(createComment({data, pageId}))
+        dispatch(createComment({...data, pageId}))
         setData({})
     }
     const validateSchema = yup.object().shape({

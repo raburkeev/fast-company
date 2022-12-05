@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {dateFunction} from '../../../utils/date/dateFunction'
+import {displayDate} from '../../../utils/date/dateFunction'
 import {useDispatch, useSelector} from 'react-redux'
 import {getCurrentUserId, getUserById} from '../../../store/users'
 import {removeComment} from '../../../store/comments'
@@ -20,7 +20,7 @@ const CommentComponent = ({content, userId, _id: id, created_at: created}) => {
                 <div className="col">
                     <div className="d-flex flex-start">
                         <img
-                            src={user.img}
+                            src={user.image}
                             className="rounded-circle shadow-1-strong me-3"
                             alt="avatar"
                             width="65"
@@ -31,7 +31,7 @@ const CommentComponent = ({content, userId, _id: id, created_at: created}) => {
                                 <div className="d-flex justify-content-between align-items-center">
                                     <p className="mb-1">
                                         {user.name}
-                                        <span className="small">{` ${dateFunction(created)}`}</span>
+                                        <span className="small">{` ${displayDate(created)}`}</span>
                                     </p>
                                     {currentUserId === userId && (
                                         <button className="btn btn-sm text-primary d-flex align-items-center" onClick={onRemove}
@@ -54,7 +54,7 @@ CommentComponent.propTypes = {
     userId: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,
     userName: PropTypes.string,
-    created_at: PropTypes.number.isRequired,
+    created_at: PropTypes.string.isRequired,
     _id: PropTypes.string.isRequired
 }
 
