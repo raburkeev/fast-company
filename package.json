@@ -10,7 +10,7 @@
     "start": "node server.js",
     "install-client": "cd client && npm install",
     "build": "cd client && npm run build",
-    "postbuild": "npm install && npm run install-client && npm run build"
+    "heroku-postbuild": "npm install && npm run install-client && npm run build"
   },
   "keywords": [
     "nodeJS"
