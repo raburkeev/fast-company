@@ -1,4 +1,8 @@
 {
+<<<<<<< HEAD
   "apiEndPoint": "api/",
+=======
+  "apiEndPoint": "/api/",
+>>>>>>> 61d1837f238a8de45b0c3ce879d6f56cca439f34
   "isFireBase": false
 }
