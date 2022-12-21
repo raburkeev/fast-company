@@ -1,8 +1,4 @@
 {
-<<<<<<< HEAD
-  "apiEndPoint": "api/",
-=======
-  "apiEndPoint": "/api/",
->>>>>>> 61d1837f238a8de45b0c3ce879d6f56cca439f34
+  "apiEndPoint": "http://localhost:8080/api/",
   "isFireBase": false
 }
